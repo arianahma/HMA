@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HMA · Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0f0d0a;
+      --bg2:      #141210;
+      --surface:  #1a1711;
+      --surface2: #201d18;
+      --border:   #2e2820;
+      --gold:     #e3c488;
+      --gold-dim: #9a7b43;
+      --text:     #e8e0d4;
+      --muted:    #8a7f72;
+      --dim:      #4a4238;
+      --success:  #6abf6a;
+      --danger:   #e05a5a;
+      --r: 4px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", system-ui, sans-serif;
+      font-size: 13px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ---- Topbar ---- */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; height: 52px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar__brand { font-size: 12px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); }
+    .topbar__right { display: flex; align-items: center; gap: .9rem; }
+    #connStatus { font-size: 12px; color: var(--muted); }
+    #connStatus.ok  { color: var(--success); }
+    #connStatus.err { color: var(--danger); }
+
+    /* ---- Buttons ---- */
+    .btn {
+      display: inline-flex; align-items: center; gap: .35rem;
+      border: 1px solid transparent; border-radius: var(--r);
+      padding: .45rem 1rem; font-family: inherit; font-size: 12px;
+      font-weight: 500; cursor: pointer; white-space: nowrap; transition: all .18s;
+      text-decoration: none;
+    }
+    .btn-primary  { background: var(--gold); color: #15130f; border-color: var(--gold); }
+    .btn-primary:hover { background: #d4b578; }
+    .btn-primary:disabled { opacity: .4; cursor: not-allowed; }
+    .btn-ghost  { background: transparent; color: var(--text); border-color: var(--border); }
+    .btn-ghost:hover { border-color: var(--muted); }
+    .btn-danger { background: transparent; color: var(--danger); border-color: var(--danger); }
+    .btn-sm     { padding: .28rem .6rem; font-size: 11px; }
+
+    /* ---- Layout ---- */
+    .main { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+    /* ---- Notice ---- */
+    .notice {
+      padding: .65rem .9rem; border-radius: var(--r);
+      font-size: 12px; margin-bottom: 1rem; line-height: 1.4;
+    }
+    .notice-info    { background: rgba(227,196,136,.07); border: 1px solid rgba(227,196,136,.2); color: var(--gold); }
+    .notice-success { background: rgba(106,191,106,.07); border: 1px solid rgba(106,191,106,.2); color: var(--success); }
+    .notice-error   { background: rgba(224,90,90,.09);   border: 1px solid rgba(224,90,90,.25);  color: var(--danger); }
+
+    /* ---- Auth panel ---- */
+    .auth-wrap { display: flex; justify-content: center; padding-top: 3rem; }
+    .auth-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 2rem; width: 100%; max-width: 440px;
+    }
+    .auth-box h2 { font-size: 15px; font-weight: 600; margin-bottom: .35rem; }
+    .auth-box p  { color: var(--muted); font-size: 12px; line-height: 1.6; margin-bottom: 1.4rem; }
+    .auth-box a  { color: var(--gold); }
+
+    /* ---- Fields ---- */
+    .field { margin-bottom: .9rem; }
+    .field label {
+      display: block; font-size: 10px; font-weight: 500;
+      letter-spacing: .09em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: .35rem;
+    }
+    .field input, .field textarea, .field select {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--r); padding: .55rem .75rem;
+      font-family: inherit; font-size: 13px; color: var(--text);
+      transition: border-color .18s; resize: vertical;
+    }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      outline: none; border-color: var(--gold-dim);
+    }
+    .field-row   { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+    .field-row-3 { display: grid; grid-template-columns: 64px 1fr 1.4fr; gap: .6rem; align-items: start; }
+
+    /* ---- Section cards ---- */
+    .section-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 6px; margin-bottom: .6rem; overflow: hidden;
+    }
+    .section-card__hd {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .8rem 1rem; cursor: pointer; user-select: none;
+      border-bottom: 1px solid transparent; transition: background .15s;
+    }
+    .section-card__hd:hover { background: var(--surface2); }
+    .section-card.open .section-card__hd { border-bottom-color: var(--border); }
+    .section-card__label { font-size: 12px; font-weight: 500; }
+    .section-card__arrow { color: var(--dim); font-size: 9px; transition: transform .2s; }
+    .section-card.open .section-card__arrow { transform: rotate(180deg); }
+    .section-card__body { display: none; padding: 1rem; }
+    .section-card.open .section-card__body { display: block; }
+
+    /* ---- Array items ---- */
+    .array-hint { font-size: 11px; color: var(--dim); margin-bottom: .6rem; font-style: italic; }
+    .array-item {
+      display: grid; align-items: start; gap: .5rem;
+      margin-bottom: .5rem; padding-bottom: .5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .array-item:last-child { border-bottom: 0; padding-bottom: 0; }
+    .array-item--stat { grid-template-columns: 1fr auto; }
+    .array-item--row  { grid-template-columns: 1fr auto; }
+    .array-item--card { grid-template-columns: 1fr auto; }
+    .array-add { margin-top: .6rem; }
+
+    /* ---- Color field ---- */
+    .color-row { display: flex; align-items: center; gap: .5rem; }
+    .color-row input[type="color"] {
+      width: 30px; height: 30px; padding: 2px; cursor: pointer;
+      border: 1px solid var(--border); border-radius: var(--r);
+      background: var(--bg); flex-shrink: 0;
+    }
+    .color-row input[type="text"] { font-family: 'SFMono-Regular', monospace; font-size: 12px; letter-spacing: .05em; }
+
+    /* ---- Theme section grid ---- */
+    .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+    .theme-divider { grid-column: 1/-1; border: 0; border-top: 1px solid var(--border); margin: .2rem 0; }
+    .theme-note { grid-column: 1/-1; font-size: 11px; color: var(--dim); font-style: italic; margin-top: .2rem; }
+
+    /* ---- Spinner ---- */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin {
+      display: inline-block; width: 12px; height: 12px;
+      border: 2px solid var(--border); border-top-color: var(--gold);
+      border-radius: 50%; animation: spin .6s linear infinite;
+    }
+
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+
+<!-- ░░ Topbar ░░ -->
+<header class="topbar">
+  <div class="topbar__brand">HMA · Admin</div>
+  <div class="topbar__right">
+    <span id="connStatus">Not connected</span>
+    <a id="previewLink" class="btn btn-ghost" target="_blank" hidden>View site ↗</a>
+    <button id="saveBtn" class="btn btn-primary" disabled>Save to GitHub</button>
+  </div>
+</header>
+
+<main class="main">
+  <div id="notif" hidden></div>
+
+  <!-- ░░ Auth ░░ -->
+  <div class="auth-wrap" id="authWrap">
+    <div class="auth-box">
+      <h2>Connect to GitHub</h2>
+      <p>Enter a GitHub Personal Access Token with <strong>repo</strong> scope (or <strong>public_repo</strong> for public repos). Your token is only kept in this browser session — it is never sent anywhere except GitHub.</p>
+      <div class="field">
+        <label>Repository</label>
+        <input id="authRepo" type="text" value="arianahma/HMA" />
+      </div>
+      <div class="field">
+        <label>Branch</label>
+        <input id="authBranch" type="text" value="main" />
+      </div>
+      <div class="field">
+        <label>Personal Access Token</label>
+        <input id="authToken" type="password" placeholder="ghp_…" autocomplete="off" />
+      </div>
+      <button id="connectBtn" class="btn btn-primary" style="width:100%;justify-content:center">Connect</button>
+    </div>
+  </div>
+
+  <!-- ░░ Editor ░░ -->
+  <div id="editor" hidden></div>
+</main>
+
+<script>
+'use strict';
+
+/* ================================================================
+   Schema — one entry per section, fields define the form
+   ================================================================ */
+var SCHEMA = [
+  { id:'nav', label:'Nav & Brand', fields:[
+    { key:'wordmarkShort', label:'Wordmark (short)', type:'text' },
+    { key:'wordmarkFull',  label:'Wordmark (full text)',  type:'text' }
+  ]},
+  { id:'hero', label:'Hero', fields:[
+    { key:'kicker',     label:'Kicker (small label above title)', type:'text' },
+    { key:'title',      label:'Title (main heading)', type:'text' },
+    { key:'lede',       label:'Lede (opening paragraph)', type:'textarea' },
+    { key:'ctaPrimary', label:'Primary button label', type:'text' },
+    { key:'ctaGhost',   label:'Secondary button label', type:'text' }
+  ]},
+  { id:'forWhom', label:'For Whom', fields:[
+    { key:'lead', label:'Lead paragraph', type:'textarea' },
+    { key:'tags', label:'Audience tags — one per line', type:'list' }
+  ]},
+  { id:'advisory', label:'01 · The Advisory', fields:[
+    { key:'kicker',    label:'Kicker', type:'text' },
+    { key:'title',     label:'Title', type:'text' },
+    { key:'p1',        label:'Paragraph 1', type:'textarea' },
+    { key:'p2',        label:'Paragraph 2', type:'textarea' },
+    { key:'pullQuote', label:'Pull quote (larger italic text)', type:'textarea' },
+    { key:'p3',        label:'Paragraph 3', type:'textarea' }
+  ]},
+  { id:'different', label:'02 · Why it is different', fields:[
+    { key:'kicker', label:'Kicker', type:'text' },
+    { key:'title',  label:'Title', type:'text' },
+    { key:'lead',   label:'Main paragraph', type:'textarea' },
+    { key:'note',   label:'Closing note (italic)', type:'textarea' }
+  ]},
+  { id:'approach', label:'03 · The Approach', fields:[
+    { key:'kicker',    label:'Kicker', type:'text' },
+    { key:'title',     label:'Title', type:'text' },
+    { key:'stats',     label:'Statistics', type:'stats', hint:'Each stat shows a large number and a short label beneath it.' },
+    { key:'p1',        label:'Paragraph 1', type:'textarea' },
+    { key:'p2',        label:'Paragraph 2', type:'textarea' },
+    { key:'p3',        label:'Paragraph 3', type:'textarea' },
+    { key:'pullQuote', label:'Pull quote', type:'textarea' },
+    { key:'p4',        label:'Paragraph 4', type:'textarea' }
+  ]},
+  { id:'structure', label:'04 · The 28-Day Advisory', fields:[
+    { key:'kicker', label:'Kicker', type:'text' },
+    { key:'title',  label:'Title', type:'text' },
+    { key:'rows',   label:'Structure rows', type:'rows', hint:'Each row has a large number, a heading, and a short description.' },
+    { key:'note',   label:'Closing note (italic)', type:'textarea' }
+  ]},
+  { id:'receive', label:'05 · What You Receive', fields:[
+    { key:'kicker', label:'Kicker', type:'text' },
+    { key:'title',  label:'Title', type:'text' },
+    { key:'cards',  label:'Cards', type:'cards', hint:'Each card has a heading and a short description.' }
+  ]},
+  { id:'experience', label:'06 · The Experience', fields:[
+    { key:'kicker', label:'Kicker', type:'text' },
+    { key:'words',  label:'Words (large display text)', type:'text' },
+    { key:'text',   label:'Description paragraph', type:'textarea' }
+  ]},
+  { id:'programme', label:'07 · The Online Programme', fields:[
+    { key:'kicker', label:'Kicker', type:'text' },
+    { key:'title',  label:'Title', type:'text' },
+    { key:'text',   label:'Description paragraph', type:'textarea' },
+    { key:'items',  label:'Programme items — one per line', type:'list' }
+  ]},
+  { id:'about', label:'08 · About Ariana', fields:[
+    { key:'kicker',    label:'Kicker', type:'text' },
+    { key:'title',     label:'Title', type:'text' },
+    { key:'p1',        label:'Paragraph 1', type:'textarea' },
+    { key:'pullQuote', label:'Pull quote', type:'textarea' },
+    { key:'p2',        label:'Paragraph 2', type:'textarea' }
+  ]},
+  { id:'investment', label:'09 · Investment', fields:[
+    { key:'kicker', label:'Kicker', type:'text' },
+    { key:'title',  label:'Title', type:'text' },
+    { key:'p1',     label:'Main paragraph', type:'textarea' },
+    { key:'p2',     label:'Second paragraph (smaller)', type:'textarea' }
+  ]},
+  { id:'apply', label:'10 · Apply', fields:[
+    { key:'kicker',      label:'Kicker', type:'text' },
+    { key:'title',       label:'Title', type:'text' },
+    { key:'submitLabel', label:'Submit button label', type:'text' },
+    { key:'note',        label:'Note below submit button', type:'textarea' }
+  ]},
+  { id:'footer', label:'Footer', fields:[
+    { key:'tagline', label:'Tagline', type:'text' }
+  ]},
+  { id:'theme', label:'Design & Colours', fields:[
+    { key:'accent',      label:'Accent colour (gold)',         type:'color' },
+    { key:'accentInk',   label:'Accent ink (darker gold)',     type:'color' },
+    { key:'onAccent',    label:'Text on accent button',        type:'color' },
+    { key:'bg',          label:'Page background',              type:'color' },
+    { key:'bg2',         label:'Section contrast background',  type:'color' },
+    { key:'surface',     label:'Card / surface background',    type:'color' },
+    { key:'ink',         label:'Primary text colour',          type:'color' },
+    { key:'inkSoft',     label:'Muted text colour',            type:'color' },
+    { key:'line',        label:'Border / line colour',         type:'color' },
+    { key:'__divider',   label:'', type:'divider' },
+    { key:'fontDisplay', label:'Display font (Google Fonts name)', type:'text', placeholder:'Cormorant Garamond' },
+    { key:'fontBody',    label:'Body font (Google Fonts name)',    type:'text', placeholder:'Inter' },
+    { key:'__fontnote',  label:'', type:'fontnote' }
+  ]}
+];
+
+/* ================================================================
+   GitHub API helpers
+   ================================================================ */
+var GH = { owner:'', repo:'', branch:'main', token:'', sha:null };
+
+function ghUrl(path) {
+  return 'https://api.github.com/repos/' + GH.owner + '/' + GH.repo + path;
+}
+function ghHeaders(extra) {
+  return Object.assign({
+    'Authorization': 'Bearer ' + GH.token,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28'
+  }, extra || {});
+}
+
+async function ghLoad() {
+  var r = await fetch(ghUrl('/contents/content.json?ref=' + GH.branch), { headers: ghHeaders() });
+  if (!r.ok) { var e = await r.json(); throw new Error(e.message || r.statusText); }
+  var d = await r.json();
+  GH.sha = d.sha;
+  return JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
+}
+
+async function ghSave(content) {
+  var str = JSON.stringify(content, null, 2);
+  var encoded = btoa(unescape(encodeURIComponent(str)));
+  var r = await fetch(ghUrl('/contents/content.json'), {
+    method: 'PUT',
+    headers: ghHeaders({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify({ message:'Update content via HMA admin', content:encoded, sha:GH.sha, branch:GH.branch })
+  });
+  if (!r.ok) { var e = await r.json(); throw new Error(e.message || r.statusText); }
+  var d = await r.json();
+  GH.sha = d.content.sha;
+}
+
+/* ================================================================
+   HTML helpers
+   ================================================================ */
+function ea(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function et(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ================================================================
+   Build editor
+   ================================================================ */
+var currentContent = null;
+
+function buildEditor(content) {
+  currentContent = content;
+  var el = document.getElementById('editor');
+  el.innerHTML = '';
+
+  SCHEMA.forEach(function(section) {
+    var card = document.createElement('div');
+    card.className = 'section-card';
+    card.dataset.sid = section.id;
+    card.innerHTML =
+      '<div class="section-card__hd" onclick="toggleCard(this.parentElement)">' +
+        '<span class="section-card__label">' + ea(section.label) + '</span>' +
+        '<span class="section-card__arrow">▼</span>' +
+      '</div>' +
+      '<div class="section-card__body"></div>';
+
+    var body = card.querySelector('.section-card__body');
+    var sData = content[section.id] || {};
+
+    section.fields.forEach(function(f) {
+      body.appendChild(buildField(section.id, f, sData[f.key]));
+    });
+
+    el.appendChild(card);
+  });
+
+  initColorPickers();
+}
+
+function buildField(sid, f, val) {
+  var wrap = document.createElement('div');
+  wrap.className = 'field';
+  wrap.dataset.sid = sid;
+  wrap.dataset.fkey = f.key;
+  wrap.dataset.ftype = f.type;
+
+  if (f.type === 'divider') {
+    wrap.innerHTML = '<hr class="theme-divider">';
+    return wrap;
+  }
+  if (f.type === 'fontnote') {
+    wrap.innerHTML = '<p class="theme-note">Font changes take effect immediately on the site. The page will use the Google Font if it is already loaded; to add a new font you will also need to update the &lt;link&gt; tag in index.html.</p>';
+    return wrap;
+  }
+
+  var label = '<label>' + ea(f.label) + '</label>';
+
+  if (f.type === 'text') {
+    wrap.innerHTML = label + '<input type="text" value="' + ea(val||'') + '" placeholder="' + ea(f.placeholder||'') + '" data-inp />';
+  } else if (f.type === 'textarea') {
+    wrap.innerHTML = label + '<textarea rows="3" data-inp>' + et(val||'') + '</textarea>';
+  } else if (f.type === 'list') {
+    var lines = Array.isArray(val) ? val.join('\n') : (val||'');
+    wrap.innerHTML = label + '<textarea rows="' + Math.max(3, lines.split('\n').length+1) + '" data-inp>' + et(lines) + '</textarea>';
+  } else if (f.type === 'color') {
+    var hex = val || '#000000';
+    wrap.innerHTML = label +
+      '<div class="color-row">' +
+        '<input type="color" value="' + ea(hex) + '" data-cpick />' +
+        '<input type="text" value="' + ea(hex) + '" maxlength="7" placeholder="#000000" data-inp />' +
+      '</div>';
+  } else if (f.type === 'stats') {
+    var items = Array.isArray(val) ? val : [];
+    wrap.innerHTML = label +
+      (f.hint ? '<div class="array-hint">' + ea(f.hint) + '</div>' : '') +
+      '<div class="array-wrap" data-atype="stats">' +
+        items.map(statItem).join('') +
+      '</div>' +
+      '<button class="btn btn-ghost btn-sm array-add" onclick="addItem(this,\'stats\')">+ Add stat</button>';
+  } else if (f.type === 'rows') {
+    var items = Array.isArray(val) ? val : [];
+    wrap.innerHTML = label +
+      (f.hint ? '<div class="array-hint">' + ea(f.hint) + '</div>' : '') +
+      '<div class="array-wrap" data-atype="rows">' +
+        items.map(rowItem).join('') +
+      '</div>' +
+      '<button class="btn btn-ghost btn-sm array-add" onclick="addItem(this,\'rows\')">+ Add row</button>';
+  } else if (f.type === 'cards') {
+    var items = Array.isArray(val) ? val : [];
+    wrap.innerHTML = label +
+      (f.hint ? '<div class="array-hint">' + ea(f.hint) + '</div>' : '') +
+      '<div class="array-wrap" data-atype="cards">' +
+        items.map(cardItem).join('') +
+      '</div>' +
+      '<button class="btn btn-ghost btn-sm array-add" onclick="addItem(this,\'cards\')">+ Add card</button>';
+  }
+
+  return wrap;
+}
+
+function statItem(item) {
+  return '<div class="array-item array-item--stat">' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Number</label><input type="text" value="' + ea(item.n||'') + '" data-sn /></div>' +
+      '<div class="field"><label>Label</label><input type="text" value="' + ea(item.label||'') + '" data-sl /></div>' +
+    '</div>' +
+    '<button class="btn btn-danger btn-sm" onclick="removeItem(this)" style="margin-top:1.4rem" title="Remove">✕</button>' +
+  '</div>';
+}
+function rowItem(item) {
+  return '<div class="array-item array-item--row">' +
+    '<div class="field-row-3">' +
+      '<div class="field"><label>No.</label><input type="text" value="' + ea(item.n||'') + '" data-rn /></div>' +
+      '<div class="field"><label>Heading</label><input type="text" value="' + ea(item.heading||'') + '" data-rh /></div>' +
+      '<div class="field"><label>Description</label><input type="text" value="' + ea(item.text||'') + '" data-rt /></div>' +
+    '</div>' +
+    '<button class="btn btn-danger btn-sm" onclick="removeItem(this)" style="margin-top:1.4rem" title="Remove">✕</button>' +
+  '</div>';
+}
+function cardItem(item) {
+  return '<div class="array-item array-item--card">' +
+    '<div>' +
+      '<div class="field"><label>Heading</label><input type="text" value="' + ea(item.heading||'') + '" data-ch /></div>' +
+      '<div class="field"><label>Description</label><textarea rows="2" data-ct>' + et(item.text||'') + '</textarea></div>' +
+    '</div>' +
+    '<button class="btn btn-danger btn-sm" onclick="removeItem(this)" style="margin-top:1.4rem" title="Remove">✕</button>' +
+  '</div>';
+}
+
+function addItem(btn, type) {
+  var wrap = btn.previousElementSibling;
+  if (type === 'stats') wrap.insertAdjacentHTML('beforeend', statItem({n:'',label:''}));
+  else if (type === 'rows')  wrap.insertAdjacentHTML('beforeend', rowItem({n:'',heading:'',text:''}));
+  else if (type === 'cards') wrap.insertAdjacentHTML('beforeend', cardItem({heading:'',text:''}));
+  initColorPickers();
+}
+function removeItem(btn) { btn.closest('.array-item').remove(); }
+function toggleCard(card) { card.classList.toggle('open'); }
+
+function initColorPickers() {
+  document.querySelectorAll('.color-row').forEach(function(row) {
+    var pick = row.querySelector('[data-cpick]');
+    var text = row.querySelector('[data-inp]');
+    if (!pick || !text || pick._bound) return;
+    pick._bound = true;
+    pick.addEventListener('input', function() { text.value = pick.value; });
+    text.addEventListener('input', function() { if (/^#[0-9a-f]{6}$/i.test(text.value)) pick.value = text.value; });
+  });
+}
+
+/* ================================================================
+   Read form → content object
+   ================================================================ */
+function readForm() {
+  var content = JSON.parse(JSON.stringify(currentContent || {}));
+
+  document.querySelectorAll('.section-card').forEach(function(card) {
+    var sid = card.dataset.sid;
+    if (!content[sid]) content[sid] = {};
+
+    card.querySelectorAll('.field[data-fkey]').forEach(function(fw) {
+      var key  = fw.dataset.fkey;
+      var type = fw.dataset.ftype;
+      if (type === 'divider' || type === 'fontnote') return;
+
+      if (type === 'text' || type === 'textarea' || type === 'color') {
+        var inp = fw.querySelector('[data-inp]');
+        if (inp) content[sid][key] = inp.value.trim();
+      } else if (type === 'list') {
+        var inp = fw.querySelector('[data-inp]');
+        if (inp) content[sid][key] = inp.value.split('\n').map(function(l){return l.trim();}).filter(Boolean);
+      } else if (type === 'stats') {
+        content[sid][key] = [].map.call(fw.querySelectorAll('.array-item'), function(item) {
+          return { n: v(item,'[data-sn]'), label: v(item,'[data-sl]') };
+        });
+      } else if (type === 'rows') {
+        content[sid][key] = [].map.call(fw.querySelectorAll('.array-item'), function(item) {
+          return { n: v(item,'[data-rn]'), heading: v(item,'[data-rh]'), text: v(item,'[data-rt]') };
+        });
+      } else if (type === 'cards') {
+        content[sid][key] = [].map.call(fw.querySelectorAll('.array-item'), function(item) {
+          return { heading: v(item,'[data-ch]'), text: vt(item,'[data-ct]') };
+        });
+      }
+    });
+  });
+
+  return content;
+}
+
+function v(parent, sel)  { var el = parent.querySelector(sel); return el ? el.value.trim() : ''; }
+function vt(parent, sel) { var el = parent.querySelector(sel); return el ? el.value : ''; }
+
+/* ================================================================
+   UI helpers
+   ================================================================ */
+function setStatus(msg, cls) {
+  var el = document.getElementById('connStatus');
+  el.textContent = msg;
+  el.className = cls || '';
+}
+function notify(msg, type) {
+  var el = document.getElementById('notif');
+  el.className = 'notice notice-' + (type||'info');
+  el.textContent = msg;
+  el.hidden = false;
+  if (type !== 'error') setTimeout(function(){ el.hidden = true; }, 5000);
+}
+
+/* ================================================================
+   Connect
+   ================================================================ */
+document.getElementById('connectBtn').addEventListener('click', async function() {
+  var repoStr = document.getElementById('authRepo').value.trim();
+  var parts = repoStr.split('/');
+  if (parts.length !== 2 || !parts[0] || !parts[1]) {
+    notify('Enter the repository as owner/name (e.g. arianahma/HMA)', 'error'); return;
+  }
+  GH.owner  = parts[0];
+  GH.repo   = parts[1];
+  GH.branch = document.getElementById('authBranch').value.trim() || 'main';
+  GH.token  = document.getElementById('authToken').value.trim();
+  if (!GH.token) { notify('Please enter your GitHub token.', 'error'); return; }
+
+  var btn = document.getElementById('connectBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Connecting…';
+
+  try {
+    var content = await ghLoad();
+    setStatus('Connected · ' + repoStr, 'ok');
+
+    document.getElementById('authWrap').hidden = true;
+    document.getElementById('editor').hidden = false;
+    document.getElementById('saveBtn').disabled = false;
+
+    var pl = document.getElementById('previewLink');
+    pl.href = 'https://' + GH.owner.toLowerCase() + '.github.io/' + GH.repo + '/';
+    pl.hidden = false;
+
+    sessionStorage.setItem('hma_gh', JSON.stringify({ owner:GH.owner, repo:GH.repo, branch:GH.branch, token:GH.token }));
+
+    buildEditor(content);
+    notify('Loaded. Edit any section below, then click Save to GitHub.', 'info');
+  } catch(e) {
+    setStatus('Connection failed', 'err');
+    notify('Error: ' + e.message, 'error');
+    btn.disabled = false;
+    btn.textContent = 'Connect';
+  }
+});
+
+/* ================================================================
+   Save
+   ================================================================ */
+document.getElementById('saveBtn').addEventListener('click', async function() {
+  var btn = document.getElementById('saveBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Saving…';
+
+  try {
+    var content = readForm();
+    await ghSave(content);
+    currentContent = content;
+    setStatus('Saved ✓', 'ok');
+    notify('Saved to GitHub. The site will update in about 30 seconds.', 'success');
+    setTimeout(function(){ setStatus('Connected · ' + GH.owner + '/' + GH.repo, 'ok'); }, 3500);
+  } catch(e) {
+    notify('Save failed: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Save to GitHub';
+  }
+});
+
+/* ================================================================
+   Restore session on page load
+   ================================================================ */
+(function() {
+  var saved = sessionStorage.getItem('hma_gh');
+  if (!saved) return;
+  try {
+    var d = JSON.parse(saved);
+    document.getElementById('authRepo').value   = d.owner + '/' + d.repo;
+    document.getElementById('authBranch').value = d.branch;
+    document.getElementById('authToken').value  = d.token;
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>
