@@ -630,6 +630,20 @@ function setEnv(env,btn){
     b.classList.toggle('active', b.dataset.env===env)
   );
 }
+// ── Auto-detect environment from device time ─
+(function autoEnv(){
+  const h = new Date().getHours();
+  let env = 'day';
+  if(h >= 4  && h < 8)  env = 'dawn';
+  else if(h >= 8  && h < 17) env = 'day';
+  else if(h >= 17 && h < 20) env = 'dusk';
+  else                        env = 'night';
+  document.getElementById('phone').dataset.env = env;
+  document.querySelectorAll('.env-btn,.mobile-env button').forEach(b=>
+    b.classList.toggle('active', b.dataset.env===env)
+  );
+})();
+
 // ── Pillar toggle (max 3) ────────────────────
 function togglePillar(el){
   const grid=document.getElementById('pillarGrid');
