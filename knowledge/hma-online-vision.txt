@@ -1,0 +1,299 @@
+THE HUMAN MASTERY ARCHITECTURE™
+
+HMA ONLINE | IMMERSIVE EXPERIENCE & BUILD VISION
+
+Product direction for Firas | 19 November 2026
+
+A living sanctuary for awareness, clarity, action and a life fully lived.
+
+North star: HMA does not demand more of an Architect’s attention. It repeatedly returns their attention to their life.
+
+One meaningful shift each day.
+
+01 THE CREATIVE DIRECTION
+
+Build an immersive, nature-led digital sanctuary, not a conventional course dashboard. The experience should feel
+
+elevated, deeply calm, intelligent, emotionally warm and effortless. “Heaven” is an aesthetic metaphor for beauty,
+
+openness, renewal and possibility—not a religious claim or a promise of healing.
+
+Visual motifs: forest canopy, living leaves, soft wind, birds, water ripples, sunlight, warm firelight, natural stone,
+
+distant horizons, clouds, stars and moonlight. Use restrained cinematic motion and generous negative space. Avoid
+
+fantasy overload, glitter, constant animations, stock-coaching clichés and crowded screens.
+
+02 COLOUR & MATERIAL SYSTEM
+
+Role
+
+Base
+
+Nature
+
+Accent
+
+Warmth
+
+Text
+
+Daylight palette
+
+Night palette
+
+Ivory #F6F2E8
+
+Midnight #101E26
+
+Forest #183B30
+
+Pine #1B3938
+
+Sage #A8B9A0
+
+Moonstone #B8C8C7
+
+Champagne #D6BE91
+
+Muted bronze #AD9068
+
+Ink #23342F
+
+Mist #EDF1EB
+
+Typography: refined editorial serif for signature headings; highly legible modern sans-serif for all UI, captions and forms. Organic textures
+
+should remain subtle. All text must meet accessible contrast requirements.
+
+03 THE FIRST 60 SECONDS: LOGIN TO ARRIVAL
+
+(cid:127) 0–3 sec: Lightweight HMA mark and calm gradient; no blocking animation.
+
+(cid:127) 3–8 sec: Optional cinematic nature reveal: a sunlit woodland garden by day or moonlit landscape at night. Slow
+
+movement of leaves, water and light.
+
+(cid:127) 8–12 sec: Greeting adapts to local time: “Good morning, Architect.” A discreet invitation: “Arrive as you are.”
+
+(cid:127) 12–20 sec: One optional 20–40-second grounding breath or skip directly to Today’s Architecture.
+
+(cid:127) After arrival: Display the current ARCH™ day, a single meaningful action and clear access to rituals, journal,
+
+meditations, wisdom and progress.
+
+Critical: First login introduces preferences once; returning login should be fast. No forced meditation, splash sequence
+
+or autoplay audio. Remember choices.
+
+HMA ONLINE | PRIVATE DEVELOPMENT VISION
+
+1
+
+04 TIME-AWARE LIVING ENVIRONMENTS
+
+(cid:127) Dawn (local time): mist, rising amber light, birdsong, dew and gentle green movement.
+
+(cid:127) Day: sunlit trees, warm stone, clear water, fresh green foliage and a subtle breeze.
+
+(cid:127) Dusk: bronze light, a glowing horizon, softer birds and reflective water.
+
+(cid:127) Night: deep pine, moon, stars, silhouettes, firelight, crickets and a calmer visual rhythm.
+
+Offer “Auto / Day / Night” controls and a static low-motion alternative. Time-of-day is an atmosphere setting, never a
+
+barrier to using any feature.
+
+05 PERSONALISED AESTHETIC WITHOUT STEREOTYPES
+
+Offer Botanical Light (ivory, sage, warm gold, softer organic textures), Architectural Forest (deep forest, charcoal
+
+stone, bronze, strong geometry) and Balanced Nature (neutral green and stone). These may be described as softer,
+
+more masculine or neutral moods, but any Architect can choose any theme. Content, features and outcomes remain
+
+identical.
+
+06 SOUND DESIGN & BINAURAL AUDIO
+
+(cid:127) Audio starts off by default. Offer separate toggles for nature ambience, music and guided voice, with volume controls
+
+and mute always visible.
+
+(cid:127) Nature layers: birds, breeze, water, fire crackle, rain and nocturnal insects; mix gently and avoid startling loops.
+
+(cid:127) Optional binaural tracks require headphones for the intended stereo effect. Present as a listening preference, not a
+
+proven treatment. Provide a normal ambient alternative.
+
+(cid:127) Respect device mute, reduced motion, bandwidth and battery. Audio must stop when requested and never
+
+unexpectedly restart.
+
+07 HOME SCREEN INFORMATION ARCHITECTURE
+
+Greeting ﬁ Today’s Architecture ﬁ one primary action. Secondary destinations: Morning Arrival; Afternoon Reset;
+Evening Return; My Journal; Meditations; Wisdom Cards; My Architecture / Progress. Keep navigation persistent,
+
+minimal and mobile-first.
+
+Home screen example: “Day 9 | REALIGN — Stress & Emotional Regulation.” Primary CTA: “Begin today’s 15-minute
+
+experience.” Below: one sentence of context and optional quick links.
+
+08 THE ARCH™ CORE: 28 DAYS
+
+A — AWARENESS | Days 1–7
+
+Reality & Life Audit; Values & Vision; Energy & Wellbeing; Relationships; Leadership & Work; Patterns & Beliefs;
+
+Personal Architecture™
+
+R — REALIGN | Days 8–14
+
+Priorities; Stress & Emotional Regulation; Sleep / Nutrition / Movement; Environment; Boundaries & Relationships;
+
+Identity Alignment; Realignment Review
+
+C — CAPACITY | Days 15–21
+
+Focus; Decision-Making; Resilience; Presence; High-Pressure Responses; Leadership Capacity; Capacity Integration
+
+H — HABITS | Days 22–28
+
+Morning Architecture; Evening Architecture; Habit Systems; Accountability; Personal Metrics; Sustainable Integration;
+
+90-Day Architecture
+
+HMA ONLINE | PRIVATE DEVELOPMENT VISION
+
+2
+
+Every day: 10–15-minute video/audio ﬁ one powerful exercise ﬁ one real-life action ﬁ one optional check-in.
+Meditations, journal prompts and relevant wellbeing insights attach to that day; never create unnecessary tasks.
+
+09 PERSONALISATION & JOURNEY
+
+(cid:127) Onboarding: choose 1–3 life pillars, preferred spiritual/philosophical wisdom, theme, sound settings, reminder times
+
+and tracking consent. All optional except necessary account settings.
+
+(cid:127) Pillars: mind mastery; clarity; relationships; presence; vitality; emotional balance; courage; spirituality;
+
+freedom/abundance; leadership/legacy.
+
+(cid:127) Life Story Journal: optional prompts exploring a first encounter with a feeling or belief, what was felt then and what is
+
+understood now. Always allow skip, save privately and return later.
+
+(cid:127) Personal vision film: optional personalised imagery and intentions, shown only by choice; no requirement to watch
+
+three times daily.
+
+(cid:127) Private advisory tier: eight sessions in 28 days, with relevant levels unlocked after sessions; standalone tier
+
+progresses by day.
+
+10 WISDOM, MEDITATION & RITUALS
+
+Wisdom Cards: curated, accurately attributed selections from Bible/Christianity, Islam, Stoicism, Buddhism, Taoism,
+
+Shaolin/Zen, Judaism, Hinduism and other chosen traditions. Themes: courage, anxiety, purpose, forgiveness, love,
+
+gratitude and peace. Avoid misattributed quotes and religious blending that misrepresents sources.
+
+Meditations: presence, abundance, relationships, confidence, performance, sleep, spiritual reflection, emotional
+
+grounding and body awareness. Include breathwork for everyday stress, interviews, public speaking and first-date
+
+nerves; avoid medical cure claims or unsafe breath-holding practices.
+
+Morning Arrival: intention + breath + wisdom. Afternoon Reset: nourishment, hydration and presence. Evening Return:
+
+gratitude, reflection and rest. Reminders are configurable and never guilt-inducing.
+
+11 PROGRESS & FIRAS APP INTEGRATION
+
+Track day completed, real-world actions, optional mood/energy/focus ratings and private reflections. With explicit
+
+consent, integrate sleep, hydration, nutrition, activity and outdoor-light data from supported sources. Display trends
+
+and individual baselines, not fabricated transformation scores or diagnostic claims.
+
+Provide a phone-only mode; wearable integration is optional. Clearly explain data access, retention, export, deletion,
+
+security and what the founder/advisor can see. Private journal entries should not be visible to others by default.
+
+12 PRODUCT & ENGINEERING REQUIREMENTS
+
+(cid:127) Responsive mobile-first web app; fast loading, progressive asset delivery and static fallback for slow connections.
+
+(cid:127) Accessible keyboard navigation, captions/transcripts, readable contrast, motion/audio preferences and no autoplay
+
+sound.
+
+(cid:127) Modular CMS for 28 lessons, exercises, wisdom cards, meditations and translations; founder can update content
+
+without code changes.
+
+(cid:127) Secure accounts, role-based access, encrypted transport, explicit tracking permissions and separate admin/advisor
+
+access.
+
+(cid:127) Event logic: day progress, session-linked unlocks, optional reminders, user-selected time zone and no punitive streak
+
+mechanics.
+
+HMA ONLINE | PRIVATE DEVELOPMENT VISION
+
+3
+
+(cid:127) Design handoff: clickable Figma prototype, mobile/desktop layouts, asset specs, animation timings, audio controls,
+
+states and acceptance tests.
+
+13 BUILD ORDER & ACCEPTANCE CRITERIA
+
+Phase 1 — MVP: brand system, lightweight nature arrival, day/night modes, login, 28-day ARCH™ curriculum, rituals,
+
+journal, progress and simple content admin.
+
+Phase 2: theme selection, wisdom traditions, meditation library, personalisation, session-linked unlocking and
+
+consented tracker integration.
+
+Phase 3: personalised vision film, richer environmental motion, life-story book, digital vision board and physical
+
+product experiences.
+
+Definition of done: A new Architect can log in, select preferences, begin Day 1 within 30 seconds after setup,
+
+complete the daily journey, return to real life, and later see meaningful progress—without audio surprises, forced
+
+content or visual clutter.
+
+14 WHAT FIRAS SHOULD PRESENT FIRST
+
+(cid:127) Three home-screen visual directions: Botanical Light, Architectural Forest, Balanced Nature.
+
+(cid:127) Four environment states: dawn, day, dusk, night (static first, motion second).
+
+(cid:127) A clickable 60-second first-arrival prototype and Day 1 flow.
+
+(cid:127) A short technical proposal: stack, hosting, media delivery, content CMS, data/privacy, timeline, milestones and
+
+ownership/access permissions.
+
+FOUNDATIONAL PRINCIPLE
+
+Mastery begins with awareness, grows through conscious choice, and comes to life through
+
+intentional action. You already hold within you the capacity to create the life you envision.
+
+Ariana Georgia Ciuca | Founder, THE HUMAN MASTERY ARCHITECTURE™
+
+HMA ONLINE | PRIVATE DEVELOPMENT VISION
+
+4
+
+
