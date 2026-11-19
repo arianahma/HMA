@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<title>HMA — Interactive Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ── Reset ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#1c1c1e;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif}
+button,textarea,input{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
+svg{display:block}
+.board{display:flex;align-items:center;gap:32px;padding:32px}
+
+/* ── Phone shell — cqw scaling ── */
+.phone{
+  width:390px;aspect-ratio:390/844;
+  border-radius:52px;overflow:hidden;
+  position:relative;isolation:isolate;
+  container-type:inline-size;
+  box-shadow:0 48px 120px #0009,0 0 0 1px #ffffff14,inset 0 0 0 1px #ffffff0a;
+  flex-shrink:0;
+  /* day defaults */
+  --env-bg:#F4F0E6;--env-bg2:#EDE7D8;
+  --env-glow:rgba(154,123,67,0.10);
+  --env-surface:rgba(255,253,248,0.90);
+  --env-surface2:rgba(250,247,240,0.65);
+  --env-border:rgba(180,155,100,0.18);
+  --env-text:#1C2820;--env-text-soft:rgba(60,50,35,0.52);
+  --env-accent:#9A7B43;--env-accent-soft:rgba(154,123,67,0.12);
+  --env-accent-btn:#FAF8F2;
+  --nav-bg:rgba(248,244,236,0.92);
+  --is-dark:0;
+}
+.phone[data-env="dawn"]{
+  --env-bg:#120D08;--env-bg2:#2E1A08;
+  --env-glow:rgba(220,140,40,0.22);
+  --env-surface:rgba(255,220,150,0.08);
+  --env-surface2:rgba(255,210,120,0.05);
+  --env-border:rgba(220,170,80,0.16);
+  --env-text:#F5E8C8;--env-text-soft:rgba(240,220,170,0.52);
+  --env-accent:#E8A040;--env-accent-soft:rgba(232,160,64,0.16);
+  --env-accent-btn:#0F0A05;
+  --nav-bg:rgba(20,12,4,0.88);--is-dark:1;
+}
+.phone[data-env="dusk"]{
+  --env-bg:#1A0E08;--env-bg2:#3A1808;
+  --env-glow:rgba(200,110,40,0.22);
+  --env-surface:rgba(220,140,60,0.08);
+  --env-surface2:rgba(200,120,50,0.05);
+  --env-border:rgba(200,130,60,0.18);
+  --env-text:#F0DCC0;--env-text-soft:rgba(230,200,150,0.52);
+  --env-accent:#C87838;--env-accent-soft:rgba(200,120,56,0.16);
+  --env-accent-btn:#100806;
+  --nav-bg:rgba(22,10,4,0.90);--is-dark:1;
+}
+.phone[data-env="night"]{
+  --env-bg:#080F0C;--env-bg2:#101C14;
+  --env-glow:rgba(100,160,130,0.14);
+  --env-surface:rgba(100,160,130,0.08);
+  --env-surface2:rgba(80,140,110,0.05);
+  --env-border:rgba(120,170,145,0.15);
+  --env-text:#E0EDE5;--env-text-soft:rgba(200,230,210,0.52);
+  --env-accent:#88B8A0;--env-accent-soft:rgba(136,184,160,0.15);
+  --env-accent-btn:#050C08;
+  --nav-bg:rgba(6,12,8,0.90);--is-dark:1;
+}
+
+/* ── Wallpaper ── */
+.wallpaper{
+  position:absolute;inset:0;z-index:-2;
+  background:linear-gradient(160deg,var(--env-bg) 0%,var(--env-bg2) 100%);
+  transition:background 1.8s ease;
+}
+.wallpaper::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 45% at 50% 28%,var(--env-glow),transparent 68%);
+  transition:background 1.8s ease;pointer-events:none;
+}
+
+/* ── Status bar ── */
+.status{
+  height:15cqw;display:flex;justify-content:space-between;align-items:center;
+  padding:0 7cqw;font-size:3.8cqw;font-weight:650;
+  color:var(--env-text);position:relative;z-index:5;
+}
+.status-icons{display:flex;gap:1.5cqw;align-items:center}
+.status-icons svg{width:4cqw;height:4cqw;stroke:currentColor;fill:none;stroke-width:1.5}
+.home-ind{
+  position:absolute;bottom:2.4cqw;left:35%;width:30%;
+  height:1cqw;background:var(--env-text);border-radius:2cqw;
+  z-index:15;pointer-events:none;opacity:0.4;
+}
+
+/* ── Scroller ── */
+.scroller{
+  position:absolute;inset:15cqw 0 0;
+  overflow-y:auto;scrollbar-width:none;
+  padding:4cqw 5.5cqw 28cqw;
+}
+.scroller::-webkit-scrollbar{display:none}
+.has-nav .scroller{bottom:0;padding-bottom:28cqw}
+
+/* ── Screens ── */
+.screen{
+  position:absolute;inset:0;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.26s ease,transform 0.26s ease;
+  transform:translateX(14px);
+}
+.screen.active{opacity:1;pointer-events:all;transform:translateX(0)}
+.screen.leaving{opacity:0;transform:translateX(-14px);pointer-events:none}
+
+/* ── Glass cards ── */
+.glass{
+  background:linear-gradient(135deg,var(--env-surface),var(--env-surface2));
+  border:1px solid var(--env-border);
+  box-shadow:inset 0 1px 0 var(--env-border),0 6px 24px rgba(0,0,0,calc(0.04 + var(--is-dark)*0.08));
+  backdrop-filter:blur(24px) saturate(1.4);
+  -webkit-backdrop-filter:blur(24px) saturate(1.4);
+  border-radius:7cqw;
+  transition:background 1.8s ease,border-color 1.8s ease;
+}
+.glass-sm{border-radius:5cqw}
+.glass-lg{border-radius:8cqw}
+.p4{padding:4cqw}.p5{padding:5cqw}
+
+/* ── Bottom nav ── */
+.nav{
+  position:absolute;bottom:0;left:0;right:0;
+  display:flex;align-items:flex-start;justify-content:space-around;
+  padding:3cqw 2cqw 1.5cqw;
+  background:var(--nav-bg);
+  backdrop-filter:blur(28px) saturate(1.6);
+  -webkit-backdrop-filter:blur(28px) saturate(1.6);
+  border-top:1px solid var(--env-border);
+  z-index:20;
+}
+.nav-btn{
+  display:flex;flex-direction:column;align-items:center;gap:1cqw;
+  padding:0 3cqw;color:var(--env-text-soft);transition:color 0.2s;
+}
+.nav-btn.active{color:var(--env-accent)}
+.nav-btn svg{width:5.5cqw;height:5.5cqw;stroke:currentColor;fill:none;stroke-width:1.5}
+.nav-btn span{font-size:2.2cqw;letter-spacing:0.08em;text-transform:uppercase;font-weight:500}
+.nav-btn:not(.active) span{opacity:0}
+
+/* ── Typography ── */
+.t-display{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:9cqw;line-height:1.12;letter-spacing:-0.02em;color:var(--env-text)}
+.t-greet{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:7.5cqw;line-height:1.2;color:var(--env-text)}
+.t-heading{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:6.2cqw;line-height:1.22;color:var(--env-text)}
+.t-wisdom{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:5cqw;line-height:1.5;color:var(--env-text)}
+.t-label{font-size:2.8cqw;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--env-text-soft)}
+.t-body{font-size:3.8cqw;line-height:1.65;color:var(--env-text);font-weight:300}
+.t-sm{font-size:3.2cqw;line-height:1.5;color:var(--env-text);font-weight:300}
+.t-soft{color:var(--env-text-soft)!important}
+.t-accent{color:var(--env-accent)!important}
+.t-mark{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.8cqw;letter-spacing:0.28em;text-transform:uppercase;color:var(--env-accent)}
+
+/* ── ARCH badges ── */
+.badge{display:inline-flex;align-items:center;padding:1.5cqw 3cqw;border-radius:20cqw;font-size:2.4cqw;font-weight:600;letter-spacing:0.08em;text-transform:uppercase}
+.badge-a{background:rgba(168,192,128,0.18);color:#88A860}
+.badge-r{background:rgba(200,160,96,0.18);color:#C09050}
+.badge-c{background:rgba(120,152,176,0.18);color:#6888A8}
+.badge-h{background:rgba(104,152,112,0.18);color:#609870}
+
+/* ── Buttons ── */
+.btn{display:flex;align-items:center;justify-content:center;gap:2cqw;width:100%;min-height:13cqw;border-radius:8cqw;font-size:3.4cqw;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;transition:opacity 0.14s,transform 0.1s}
+.btn:active{transform:scale(0.98)}
+.btn-primary{background:var(--env-accent);color:var(--env-accent-btn)}
+.btn-ghost{background:transparent;color:var(--env-text);border:1.5px solid var(--env-border);min-height:11cqw}
+.btn-text{min-height:auto;width:auto;padding:0;color:var(--env-text-soft);font-size:3.2cqw;font-weight:400;letter-spacing:0.02em;text-transform:none;text-decoration:underline;text-underline-offset:3px}
+
+/* ── Step dots ── */
+.step-dots{display:flex;gap:2cqw;align-items:center;justify-content:center}
+.dot{width:1.5cqw;height:1.5cqw;border-radius:50%;background:var(--env-border);transition:all 0.28s}
+.dot.done{background:var(--env-accent);opacity:0.45}
+.dot.active{width:5cqw;border-radius:1cqw;background:var(--env-accent)}
+
+/* ── Pillar chips ── */
+.pillar-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5cqw;margin-top:4cqw}
+.pillar-chip{padding:3cqw 3.5cqw;border-radius:5cqw;border:1.5px solid var(--env-border);background:var(--env-surface2);transition:all 0.2s}
+.pillar-chip.sel{background:var(--env-accent-soft);border-color:var(--env-accent)}
+.pillar-chip h4{font-size:3.1cqw;font-weight:500;color:var(--env-text);margin-bottom:0.5cqw}
+.pillar-chip p{font-size:2.6cqw;color:var(--env-text-soft);line-height:1.4}
+
+/* ── 28-day grid ── */
+.day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2cqw;margin-top:3cqw}
+.day-cell{aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.8cqw;font-weight:500;color:var(--env-text-soft);cursor:pointer;transition:all 0.2s}
+.day-cell.done{background:var(--env-accent);color:var(--env-accent-btn);opacity:0.85}
+.day-cell.today{color:var(--env-accent);box-shadow:0 0 0 1.5px var(--env-accent)}
+.day-cell.future{opacity:0.25}
+
+/* ── Check-in ── */
+.checkin-row{display:flex;justify-content:space-between;gap:2cqw;margin-top:2cqw}
+.checkin-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:1.5cqw;padding:3cqw 2cqw;border-radius:5cqw;background:var(--env-surface2);border:1px solid var(--env-border);transition:all 0.2s}
+.checkin-item.sel{background:var(--env-accent-soft);border-color:var(--env-accent)}
+.checkin-emoji{font-size:5.5cqw}
+.checkin-label{font-size:2.4cqw;color:var(--env-text-soft);letter-spacing:0.04em}
+
+/* ── Checkbox ── */
+.check-row{display:flex;align-items:center;gap:4cqw;padding:4.5cqw;border-radius:6cqw;background:var(--env-surface);border:1.5px solid var(--env-border);transition:border-color 0.2s}
+.check-row.done{border-color:var(--env-accent)}
+.check-box{width:10cqw;height:10cqw;border-radius:3cqw;flex-shrink:0;border:2px solid var(--env-border);display:flex;align-items:center;justify-content:center;transition:all 0.28s}
+.check-box.done{background:var(--env-accent);border-color:var(--env-accent)}
+.check-box svg{width:5cqw;height:5cqw;stroke:var(--env-accent-btn);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity 0.2s}
+.check-box.done svg{opacity:1}
+
+/* ── Video placeholder ── */
+.video-block{width:100%;height:50cqw;border-radius:7cqw;position:relative;overflow:hidden;border:1px solid var(--env-border);background:linear-gradient(135deg,var(--env-bg2),var(--env-bg));display:flex;align-items:center;justify-content:center}
+.play{width:16cqw;height:16cqw;border-radius:50%;background:var(--env-accent);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(0,0,0,0.25);position:relative;z-index:1}
+.play svg{width:7cqw;height:7cqw;fill:var(--env-accent-btn);margin-left:1cqw}
+.video-label{position:absolute;bottom:4cqw;left:4cqw;right:4cqw;z-index:1;font-size:2.8cqw;color:rgba(255,255,255,0.65);letter-spacing:0.04em}
+
+/* ── Journal ── */
+.journal{width:100%;min-height:30cqw;resize:none;background:var(--env-surface2);border:1px solid var(--env-border);border-radius:5cqw;padding:4cqw;margin-top:4cqw;font-size:3.8cqw;font-weight:300;color:var(--env-text);line-height:1.6;outline:none;transition:border-color 0.2s}
+.journal::placeholder{color:var(--env-text-soft)}
+.journal:focus{border-color:var(--env-accent)}
+
+/* ── Phase progress bar ── */
+.phase-bar{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1cqw;margin-top:3cqw}
+.phase-seg{height:1.5cqw;border-radius:1cqw;background:var(--env-border)}
+.phase-seg.done{background:var(--env-accent)}
+
+/* ── Accent line ── */
+.accentbar{width:100%;height:1px;background:linear-gradient(90deg,var(--env-accent),transparent)}
+
+/* ── Complete screen ── */
+.complete-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:5cqw 8cqw}
+.complete-mark{width:18cqw;height:18cqw;border-radius:50%;background:var(--env-accent-soft);border:1.5px solid var(--env-accent);display:flex;align-items:center;justify-content:center;margin-bottom:8cqw}
+.complete-mark svg{width:8cqw;height:8cqw;stroke:var(--env-accent);fill:none;stroke-width:1.5}
+
+/* ── Utilities ── */
+.row{display:flex;align-items:center;justify-content:space-between}
+.mt1{margin-top:1cqw}.mt2{margin-top:2cqw}.mt3{margin-top:3cqw}.mt4{margin-top:4cqw}
+.mt5{margin-top:5cqw}.mt6{margin-top:6cqw}.mt8{margin-top:8cqw}.mt10{margin-top:10cqw}
+.mb2{margin-bottom:2cqw}.mb3{margin-bottom:3cqw}.mb4{margin-bottom:4cqw}
+.divider{height:1px;background:var(--env-border);margin:5cqw 0}
+.cent{text-align:center}
+.flex-col{display:flex;flex-direction:column}
+.spacer{flex:1}
+
+/* ── Side env switcher ── */
+.env-switcher{display:flex;flex-direction:column;gap:6px;padding:12px;align-self:flex-start;margin-top:60px}
+.env-btn{width:38px;height:38px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;background:rgba(0,0,0,0.3);backdrop-filter:blur(8px);transition:transform 0.18s,opacity 0.18s,box-shadow 0.18s;opacity:0.5}
+.env-btn:hover{transform:scale(1.08);opacity:0.9}
+.env-btn.active{opacity:1;box-shadow:0 0 0 2px rgba(154,123,67,0.8),0 4px 16px rgba(0,0,0,0.3)}
+.env-labels{font-size:11px;color:rgba(255,255,255,0.3);font-family:'Inter',sans-serif;letter-spacing:0.06em;line-height:2.2;padding:4px;margin-top:12px;white-space:nowrap}
+.env-labels b{display:block;color:rgba(255,255,255,0.5);letter-spacing:0.04em;margin-bottom:4px;font-size:10px}
+
+@media(max-height:900px){.phone{width:355px}}
+@media(prefers-reduced-motion:reduce){.screen,.wallpaper,.wallpaper::after{transition:none}.btn:active{transform:none}}
+</style>
+</head>
+<body>
+<div class="board">
+
+<!-- ─────────────────── Phone ─────────────────── -->
+<div class="phone" id="phone" data-env="day">
+  <div class="wallpaper"></div>
+
+  <!-- ═══ SIGN IN ═══ -->
+  <div class="screen active" id="s-signin">
+    <div class="status"><span>9:41</span><div class="status-icons"><svg viewBox="0 0 24 24"><path d="M1.5 8.5c5.5-5.5 15.5-5.5 21 0"/><path d="M5 12c3.9-3.9 11.1-3.9 15 0"/><path d="M8.5 15.5c2.2-2.2 6.8-2.2 9 0"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg><svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11v4" stroke-linecap="round"/></svg></div></div>
+    <div class="scroller flex-col">
+      <div class="spacer" style="min-height:12cqw"></div>
+      <div class="cent">
+        <div class="t-mark">Human Mastery Architecture</div>
+        <div class="t-display mt4" style="font-size:12cqw;letter-spacing:-0.04em">HMA</div>
+        <div class="t-greet mt3" style="font-size:5.5cqw">"Arrive as you are."</div>
+        <div class="t-body t-soft mt4" style="font-size:3.4cqw;max-width:68cqw;margin:4cqw auto 0">A private 28-day sanctuary for founders and leaders.</div>
+      </div>
+      <div class="spacer"></div>
+      <div>
+        <button class="btn btn-primary" onclick="goTo('s-onboard')">
+          <svg style="width:4.5cqw;height:4.5cqw;fill:currentColor" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+        <button class="btn btn-ghost mt3" style="font-size:3.2cqw;text-transform:none;letter-spacing:0.02em">Continue with email</button>
+        <div class="t-label cent mt5" style="font-size:2.4cqw">Continuing means you agree to Ariana's privacy policy.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ONBOARDING — WELCOME ═══ -->
+  <div class="screen" id="s-onboard">
+    <div class="status"><span>9:41</span></div>
+    <div class="scroller">
+      <div class="t-label mb3">Welcome, Architect</div>
+      <div class="t-display">Your 28 days<br/>begin here.</div>
+      <div class="divider"></div>
+      <div class="t-body t-soft" style="font-size:3.6cqw;line-height:1.75">Over the next 28 days you will work through the ARCH™ journey — four phases designed to return your attention to what matters most.</div>
+      <div class="t-body t-soft mt4" style="font-size:3.6cqw;line-height:1.75">15–20 minutes each day. A lesson, a reflection, an action, an observation. Nothing more.</div>
+      <div class="glass glass-lg p5 mt6" style="border-left:3px solid var(--env-accent);border-radius:0 8cqw 8cqw 0">
+        <div class="t-label mb4">The ARCH™ methodology</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3cqw">
+          <div><span class="badge badge-a">A · Awareness</span><div class="t-sm t-soft mt2">Days 1–7</div></div>
+          <div><span class="badge badge-r">R · Realign</span><div class="t-sm t-soft mt2">Days 8–14</div></div>
+          <div class="mt3"><span class="badge badge-c">C · Capacity</span><div class="t-sm t-soft mt2">Days 15–21</div></div>
+          <div class="mt3"><span class="badge badge-h">H · Habits</span><div class="t-sm t-soft mt2">Days 22–28</div></div>
+        </div>
+      </div>
+      <button class="btn btn-primary mt8" onclick="goTo('s-pillars')">Choose your pillars →</button>
+      <div class="cent mt3"><button class="btn-text" onclick="goTo('s-signin')">← Back</button></div>
+    </div>
+  </div>
+
+  <!-- ═══ PILLAR SELECTION ═══ -->
+  <div class="screen" id="s-pillars">
+    <div class="status"><span>9:41</span></div>
+    <div class="scroller">
+      <div class="t-label mb3">Your focus</div>
+      <div class="t-heading">What matters most<br/>to you right now?</div>
+      <div class="t-sm t-soft mt3">Choose 1–3 pillars. Your 28-day experience will be shaped around them.</div>
+      <div class="pillar-grid" id="pillarGrid">
+        <div class="pillar-chip" onclick="togglePillar(this)"><h4>Mind Mastery</h4><p>Patterns, beliefs &amp; awareness</p></div>
+        <div class="pillar-chip sel" onclick="togglePillar(this)"><h4>Clarity &amp; Decisions</h4><p>Focus and purposeful action</p></div>
+        <div class="pillar-chip" onclick="togglePillar(this)"><h4>Love &amp; Relationships</h4><p>Connection &amp; intimacy</p></div>
+        <div class="pillar-chip" onclick="togglePillar(this)"><h4>Joy &amp; Presence</h4><p>Gratitude and being here</p></div>
+        <div class="pillar-chip sel" onclick="togglePillar(this)"><h4>Physical Vitality</h4><p>Movement &amp; recovery</p></div>
+        <div class="pillar-chip" onclick="togglePillar(this)"><h4>Body &amp; Emotions</h4><p>Stress &amp; body signals</p></div>
+        <div class="pillar-chip sel" onclick="togglePillar(this)"><h4>Courage &amp; Resilience</h4><p>Pressure &amp; uncertainty</p></div>
+        <div class="pillar-chip" onclick="togglePillar(this)"><h4>Spiritual Connection</h4><p>Faith &amp; meaning</p></div>
+        <div class="pillar-chip" onclick="togglePillar(this)"><h4>Freedom &amp; Abundance</h4><p>Money &amp; possibility</p></div>
+        <div class="pillar-chip" onclick="togglePillar(this)"><h4>Leadership &amp; Legacy</h4><p>Contribution &amp; impact</p></div>
+      </div>
+      <button class="btn btn-primary mt8" onclick="goTo('s-today')">Begin my 28 days →</button>
+      <div class="cent mt3"><button class="btn-text" onclick="goTo('s-onboard')">← Back</button></div>
+    </div>
+  </div>
+
+  <!-- ═══ TODAY (home hub) ═══ -->
+  <div class="screen has-nav" id="s-today">
+    <div class="status"><span>9:41</span><div class="status-icons"><svg viewBox="0 0 24 24"><path d="M1.5 8.5c5.5-5.5 15.5-5.5 21 0"/><path d="M5 12c3.9-3.9 11.1-3.9 15 0"/><path d="M8.5 15.5c2.2-2.2 6.8-2.2 9 0"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg><svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11v4" stroke-linecap="round"/></svg></div></div>
+    <div class="scroller">
+      <div class="t-label mb2">Wednesday · Day 7 of 28</div>
+      <div class="t-greet">Good morning,<br/>Ariana.</div>
+      <!-- today's lesson card -->
+      <div class="glass glass-lg p5 mt5" onclick="goTo('s-lesson')" style="cursor:pointer">
+        <div class="row mb4"><span class="badge badge-a">A · Awareness</span><span class="t-label">Day 7</span></div>
+        <div class="t-heading" style="font-size:5.5cqw">Personal Architecture™</div>
+        <div class="t-sm t-soft mt2">Integrating this week's awareness into your first personal blueprint.</div>
+        <div class="accentbar mt4 mb4"></div>
+        <div class="row">
+          <div style="display:flex;gap:1.5cqw;align-items:center">
+            <svg style="width:3.5cqw;height:3.5cqw;stroke:var(--env-text-soft);fill:none;stroke-width:1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span class="t-label">15 min</span>
+          </div>
+          <button class="btn btn-primary" style="width:auto;min-height:9cqw;padding:0 5cqw;font-size:2.8cqw">Begin practice</button>
+        </div>
+      </div>
+      <!-- check-in -->
+      <div class="mt5">
+        <div class="t-label mb2">How are you arriving today?</div>
+        <div class="checkin-row">
+          <div class="checkin-item" onclick="toggleCheckin(this)"><span class="checkin-emoji">🌱</span><span class="checkin-label">Grounded</span></div>
+          <div class="checkin-item sel" onclick="toggleCheckin(this)"><span class="checkin-emoji">⚡</span><span class="checkin-label">Energised</span></div>
+          <div class="checkin-item" onclick="toggleCheckin(this)"><span class="checkin-emoji">🌊</span><span class="checkin-label">Unsettled</span></div>
+          <div class="checkin-item" onclick="toggleCheckin(this)"><span class="checkin-emoji">🕯</span><span class="checkin-label">Quiet</span></div>
+        </div>
+      </div>
+      <!-- wisdom card -->
+      <div class="mt5">
+        <div class="row mb2"><span class="t-label">Today's wisdom</span><span class="t-label t-accent" style="cursor:pointer">Library →</span></div>
+        <div class="glass glass-sm p5">
+          <div class="t-label mb3">Stoicism · Courage</div>
+          <div class="t-wisdom">"It is not death that a man should fear, but he should fear never beginning to live."</div>
+          <div class="t-sm t-soft mt2">— Marcus Aurelius</div>
+          <div class="t-sm t-soft mt3">What in your life have you been delaying beginning?</div>
+        </div>
+      </div>
+      <!-- phase progress -->
+      <div class="mt5">
+        <div class="t-label mb2">Phase progress</div>
+        <div class="glass glass-sm p4">
+          <div class="row">
+            <div>
+              <div class="t-heading" style="font-size:4.2cqw">A · Awareness</div>
+              <div class="t-sm t-soft mt1">Phase 1 of 4 · Day 7 of 7</div>
+            </div>
+            <div class="t-accent" style="font-size:7cqw;font-family:'Cormorant Garamond',serif;font-weight:500">7/7</div>
+          </div>
+          <div class="phase-bar">
+            <div class="phase-seg done"></div>
+            <div class="phase-seg"></div>
+            <div class="phase-seg"></div>
+            <div class="phase-seg"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:1.5cqw">
+            <span class="t-label t-accent">A</span>
+            <span class="t-label">R</span><span class="t-label">C</span><span class="t-label">H</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn active" onclick="goTo('s-today')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Today</span></button>
+      <button class="nav-btn" onclick="goTo('s-journey')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Journey</span></button>
+      <button class="nav-btn"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span>Library</span></button>
+      <button class="nav-btn"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profile</span></button>
+    </nav>
+  </div>
+
+  <!-- ═══ LESSON ═══ -->
+  <div class="screen" id="s-lesson">
+    <div class="status"><span>9:41</span></div>
+    <div class="scroller" style="padding-top:2cqw">
+      <div class="row mb4">
+        <button onclick="goTo('s-today')" style="font-size:7cqw;color:var(--env-text-soft);line-height:1">‹</button>
+        <div class="step-dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="width:7cqw"></div>
+      </div>
+      <div class="video-block">
+        <div class="play" onclick="goTo('s-reflect')"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+        <div class="video-label">Day 7 · Personal Architecture™ · 15 min</div>
+      </div>
+      <span class="badge badge-a mt4">A · Awareness</span>
+      <div class="t-heading mt3" style="font-size:5.5cqw">Personal Architecture™</div>
+      <div class="t-body t-soft mt3" style="font-size:3.5cqw;line-height:1.72">Day 7 marks the close of your first phase. Today you will draw together the seven threads of awareness — values, energy, relationships, leadership, patterns — into your first personal blueprint.</div>
+      <div class="glass glass-sm p4 mt5" style="border-left:3px solid var(--env-accent);border-radius:0 5cqw 5cqw 0">
+        <div class="t-label mb3">Today's lesson covers</div>
+        <div class="t-sm mt2">· What your personal architecture is</div>
+        <div class="t-sm mt2">· Why clarity precedes change</div>
+        <div class="t-sm mt2">· How to hold what you've discovered lightly</div>
+      </div>
+      <button class="btn btn-primary mt8" onclick="goTo('s-reflect')">Watch lesson · 15 min</button>
+      <div class="cent mt3"><button class="btn-text" onclick="goTo('s-today')">Save for later</button></div>
+    </div>
+  </div>
+
+  <!-- ═══ REFLECT ═══ -->
+  <div class="screen" id="s-reflect">
+    <div class="status"><span>9:41</span></div>
+    <div class="scroller" style="padding-top:2cqw">
+      <div class="row mb2">
+        <button onclick="goTo('s-lesson')" style="font-size:7cqw;color:var(--env-text-soft);line-height:1">‹</button>
+        <div class="step-dots"><div class="dot done"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+        <div style="width:7cqw"></div>
+      </div>
+      <div class="t-label mb3 mt3">Reflect · Step 2 of 4</div>
+      <div class="t-greet">Take a moment.</div>
+      <div class="t-body mt5" style="font-size:3.8cqw;line-height:1.8">If you were to design your life the way an architect designs a building — with intention, with structure, with beauty — what would you keep exactly as it is right now?</div>
+      <textarea class="journal" placeholder="Write freely. This is for you alone." rows="5"></textarea>
+      <div class="t-label mt2" style="text-align:right;font-size:2.4cqw">Private · Encrypted · Visible only to you</div>
+      <button class="btn btn-primary mt8" onclick="goTo('s-act')">Save &amp; continue</button>
+      <div class="cent mt3"><button class="btn-text" onclick="goTo('s-act')">Skip for now</button></div>
+    </div>
+  </div>
+
+  <!-- ═══ ACT ═══ -->
+  <div class="screen" id="s-act">
+    <div class="status"><span>9:41</span></div>
+    <div class="scroller" style="padding-top:2cqw">
+      <div class="row mb2">
+        <button onclick="goTo('s-reflect')" style="font-size:7cqw;color:var(--env-text-soft);line-height:1">‹</button>
+        <div class="step-dots"><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div><div class="dot"></div></div>
+        <div style="width:7cqw"></div>
+      </div>
+      <div class="t-label mb3 mt3">Act · Step 3 of 4</div>
+      <div class="t-greet">Your practice today.</div>
+      <div class="glass glass-sm p5 mt5">
+        <div class="t-label mb3">Today's action</div>
+        <div class="t-body" style="font-size:3.8cqw;line-height:1.75">Write three sentences that describe the life you are architecting. Not the life you want someday. The life you are choosing, now.</div>
+        <div class="t-sm t-soft mt3">Keep it. You will return to it on Day 28.</div>
+      </div>
+      <div class="check-row mt5" id="actRow" onclick="toggleCheck()">
+        <div class="check-box" id="checkBox"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="t-body">I completed this action</div>
+      </div>
+      <button class="btn btn-primary mt8" onclick="goTo('s-observe')">Continue</button>
+      <div class="cent mt3"><button class="btn-text" onclick="goTo('s-observe')">I'll do this later</button></div>
+    </div>
+  </div>
+
+  <!-- ═══ OBSERVE ═══ -->
+  <div class="screen" id="s-observe">
+    <div class="status"><span>9:41</span></div>
+    <div class="scroller" style="padding-top:2cqw">
+      <div class="row mb2">
+        <button onclick="goTo('s-act')" style="font-size:7cqw;color:var(--env-text-soft);line-height:1">‹</button>
+        <div class="step-dots"><div class="dot done"></div><div class="dot done"></div><div class="dot done"></div><div class="dot active"></div></div>
+        <div style="width:7cqw"></div>
+      </div>
+      <div class="t-label mb3 mt3">Observe · Step 4 of 4</div>
+      <div class="t-greet">What did you notice?</div>
+      <div class="t-body mt5" style="font-size:3.8cqw;line-height:1.8">After writing your three sentences, what did you feel? Resistance? Clarity? Surprise? There is no right answer — only your honest observation.</div>
+      <textarea class="journal" placeholder="Optional. Notice without judging." rows="4"></textarea>
+      <button class="btn btn-primary mt8" onclick="goTo('s-complete')">Complete Day 7</button>
+      <div class="cent mt3"><button class="btn-text" onclick="goTo('s-complete')">Skip observation</button></div>
+    </div>
+  </div>
+
+  <!-- ═══ DAY COMPLETE ═══ -->
+  <div class="screen" id="s-complete">
+    <div class="status" style="opacity:0.3"><span>9:41</span></div>
+    <div class="scroller" style="padding:0">
+      <div class="complete-wrap">
+        <div class="complete-mark">
+          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="t-label mb4">Day 7 complete</div>
+        <div class="t-display" style="font-size:10cqw">Phase one<br/>is done.</div>
+        <div class="t-wisdom mt5" style="font-size:4.5cqw;max-width:70cqw">"The unexamined life<br/>is not worth living."</div>
+        <div class="t-sm t-soft mt2">— Socrates</div>
+        <div class="t-label mt8" style="letter-spacing:0.14em;font-size:2.4cqw;line-height:2">The work continues in your life.</div>
+        <button class="btn btn-ghost mt10" style="max-width:60cqw" onclick="goTo('s-today')">Return home</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ JOURNEY ═══ -->
+  <div class="screen has-nav" id="s-journey">
+    <div class="status"><span>9:41</span><div class="status-icons"><svg viewBox="0 0 24 24"><path d="M1.5 8.5c5.5-5.5 15.5-5.5 21 0"/><path d="M5 12c3.9-3.9 11.1-3.9 15 0"/><path d="M8.5 15.5c2.2-2.2 6.8-2.2 9 0"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg></div></div>
+    <div class="scroller">
+      <div class="t-label mb2">Your 28 days</div>
+      <div class="t-heading">Journey</div>
+      <!-- ARCH arc -->
+      <div class="glass glass-sm p4 mt5">
+        <div class="t-label mb4">ARCH™ phases</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:3cqw">
+          <div class="cent"><div style="height:1.5cqw;border-radius:1cqw;background:var(--env-accent);margin-bottom:2cqw"></div><span class="badge badge-a" style="font-size:2cqw;padding:1cqw 2cqw">A</span><div class="t-label mt1" style="font-size:2.2cqw">1–7</div></div>
+          <div class="cent"><div style="height:1.5cqw;border-radius:1cqw;background:var(--env-border);margin-bottom:2cqw"></div><span class="badge badge-r" style="font-size:2cqw;padding:1cqw 2cqw">R</span><div class="t-label mt1" style="font-size:2.2cqw">8–14</div></div>
+          <div class="cent"><div style="height:1.5cqw;border-radius:1cqw;background:var(--env-border);margin-bottom:2cqw"></div><span class="badge badge-c" style="font-size:2cqw;padding:1cqw 2cqw">C</span><div class="t-label mt1" style="font-size:2.2cqw">15–21</div></div>
+          <div class="cent"><div style="height:1.5cqw;border-radius:1cqw;background:var(--env-border);margin-bottom:2cqw"></div><span class="badge badge-h" style="font-size:2cqw;padding:1cqw 2cqw">H</span><div class="t-label mt1" style="font-size:2.2cqw">22–28</div></div>
+        </div>
+      </div>
+      <!-- day grid -->
+      <div class="mt5">
+        <div class="t-label mb2">A · Awareness · Days 1–7</div>
+        <div class="day-grid" id="dayGrid"></div>
+      </div>
+      <!-- stats -->
+      <div class="glass glass-sm p5 mt5">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center">
+          <div><div class="t-accent" style="font-size:7cqw;font-family:'Cormorant Garamond',serif;font-weight:500">7</div><div class="t-label mt1" style="font-size:2.4cqw">days done</div></div>
+          <div><div class="t-accent" style="font-size:7cqw;font-family:'Cormorant Garamond',serif;font-weight:500">21</div><div class="t-label mt1" style="font-size:2.4cqw">ahead</div></div>
+          <div><div class="t-accent" style="font-size:7cqw;font-family:'Cormorant Garamond',serif;font-weight:500">25%</div><div class="t-label mt1" style="font-size:2.4cqw">complete</div></div>
+        </div>
+      </div>
+      <!-- pillars -->
+      <div class="mt5 mb4">
+        <div class="t-label mb3">Your pillars</div>
+        <div style="display:flex;gap:2cqw;flex-wrap:wrap">
+          <div class="pillar-chip sel" style="padding:2cqw 3.5cqw"><h4 style="font-size:3cqw">Clarity &amp; Decisions</h4></div>
+          <div class="pillar-chip sel" style="padding:2cqw 3.5cqw"><h4 style="font-size:3cqw">Physical Vitality</h4></div>
+          <div class="pillar-chip sel" style="padding:2cqw 3.5cqw"><h4 style="font-size:3cqw">Courage &amp; Resilience</h4></div>
+        </div>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn" onclick="goTo('s-today')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Today</span></button>
+      <button class="nav-btn active" onclick="goTo('s-journey')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Journey</span></button>
+      <button class="nav-btn"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span>Library</span></button>
+      <button class="nav-btn"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profile</span></button>
+    </nav>
+  </div>
+
+  <div class="home-ind"></div>
+</div><!-- /phone -->
+
+<!-- ─── ENV switcher ─── -->
+<div class="env-switcher">
+  <div class="env-btn active" data-env="day" onclick="setEnv('day',this)" title="Day · 09:00–17:00">🌤</div>
+  <div class="env-btn" data-env="dawn" onclick="setEnv('dawn',this)" title="Dawn · 04:00–08:00">🌅</div>
+  <div class="env-btn" data-env="dusk" onclick="setEnv('dusk',this)" title="Dusk · 17:00–20:00">🌇</div>
+  <div class="env-btn" data-env="night" onclick="setEnv('night',this)" title="Night · 20:00–04:00">🌙</div>
+  <div class="env-labels"><b>Environments</b>🌤 Day<br/>🌅 Dawn<br/>🌇 Dusk<br/>🌙 Night</div>
+</div>
+
+</div><!-- /board -->
+<script>
+// ── Navigation ──────────────────────────────
+let cur='s-signin';
+function goTo(id){
+  if(id===cur)return;
+  const prev=document.getElementById(cur);
+  const next=document.getElementById(id);
+  if(!prev||!next)return;
+  prev.classList.remove('active');
+  prev.classList.add('leaving');
+  setTimeout(()=>prev.classList.remove('leaving'),280);
+  next.classList.add('active');
+  cur=id;
+}
+// ── Environment ──────────────────────────────
+function setEnv(env,btn){
+  document.getElementById('phone').dataset.env=env;
+  document.querySelectorAll('.env-btn').forEach(b=>b.classList.toggle('active',b===btn));
+}
+// ── Pillar toggle (max 3) ────────────────────
+function togglePillar(el){
+  const grid=document.getElementById('pillarGrid');
+  const sel=grid.querySelectorAll('.sel');
+  if(el.classList.contains('sel')){el.classList.remove('sel')}
+  else if(sel.length<3){el.classList.add('sel')}
+}
+// ── Check-in ─────────────────────────────────
+function toggleCheckin(el){el.classList.toggle('sel')}
+// ── Act checkbox ─────────────────────────────
+let checked=false;
+function toggleCheck(){
+  checked=!checked;
+  document.getElementById('checkBox').classList.toggle('done',checked);
+  document.getElementById('actRow').classList.toggle('done',checked);
+}
+// ── 28-day grid ──────────────────────────────
+(function(){
+  const grid=document.getElementById('dayGrid');
+  if(!grid)return;
+  ['M','T','W','T','F','S','S'].forEach(d=>{
+    const h=document.createElement('div');
+    h.style.cssText='font-size:2.5cqw;text-align:center;color:var(--env-text-soft);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1cqw;font-weight:500';
+    h.textContent=d;grid.appendChild(h);
+  });
+  for(let i=1;i<=28;i++){
+    const c=document.createElement('div');
+    c.className='day-cell';c.textContent=i;
+    if(i<7)c.classList.add('done');
+    else if(i===7)c.classList.add('today');
+    else c.classList.add('future');
+    grid.appendChild(c);
+  }
+})();
+</script>
+</body>
+</html>
