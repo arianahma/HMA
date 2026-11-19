@@ -1,6 +1,6 @@
 # CLAUDE.md — HMA · The Human Mastery Architecture
 
-Project brain. Load this in every session working in `~/Websites/sites/hma/`.
+Project brain. Load this in every session working in `~/arianahma/`.
 Knowledge files: `knowledge/hma-online-vision.txt` · `knowledge/hma-online-blueprint.txt`
 
 ---
@@ -329,11 +329,20 @@ GitHub token for API writes (admin panel → content.json): stored in Firestore 
 - [ ] DNS cutover in GoDaddy (remove old IPs, add new Firebase IP + TXT)
 - [ ] Confirm old `/lander` site at `arianaciuca.com` can be fully replaced
 - [ ] Add Ariana's email to Firestore `hmaUsers` so she can self-manage the admin
-- [ ] Build the actual HMA Online Programme platform (auth, server storage, lessons)
+- [ ] Build the actual HMA Online Programme platform (auth, Firebase project `hma-programme`, 28 lessons)
 - [ ] Ariana records 28 video/audio lessons + meditation library + Life Vision film
 - [ ] Investment page: confirm whether to show price or keep "by application"
 - [ ] Confirm `hello@humanmasteryarchitecture.com` is active, or update enquiry email
 - [ ] Licensed photography to replace Unsplash references in programme (pre-launch)
+- [ ] Enable GitHub Pages on `arianahma/HMA` (arianahma account → Settings → Pages → main / root → Save)
+
+### Done
+- [x] Clickable prototype built — 9 screens, 4 environments, `prototype/index.html`
+- [x] Mobile-responsive prototype — fills `100dvh`, floating env switcher
+- [x] Auto-environment detection from device clock on load
+- [x] Firebase deploy working from `~/arianahma` — live at `https://hmasystem-47c7b.web.app/prototype/`
+- [x] Project brain migrated from `~/Websites/sites/hma/` to `~/arianahma/`
+- [x] Canonical repo changed to `arianahma/HMA` (`SARIFIAAR/hma-site` retired)
 
 ---
 
