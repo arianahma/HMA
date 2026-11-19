@@ -253,6 +253,35 @@ svg{display:block}
 
 @media(max-height:900px){.phone{width:355px}}
 @media(prefers-reduced-motion:reduce){.screen,.wallpaper,.wallpaper::after{transition:none}.btn:active{transform:none}}
+
+/* ── Mobile: fill the actual screen, hide desktop chrome ── */
+@media(max-width:600px){
+  html,body{background:#000;display:block;height:100%;overflow:hidden}
+  .board{display:block;padding:0;height:100%}
+  .env-switcher{display:none}
+  .phone{
+    width:100vw!important;height:100vh!important;height:100dvh!important;
+    aspect-ratio:unset!important;border-radius:0!important;
+    box-shadow:none!important;
+    position:fixed!important;inset:0!important;
+  }
+  .mobile-env{display:flex!important}
+}
+/* mobile env row — hidden on desktop */
+.mobile-env{
+  display:none;
+  position:absolute;bottom:88px;right:12px;z-index:30;
+  flex-direction:column;gap:6px;
+}
+.mobile-env button{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--nav-bg);border:1px solid var(--env-border);
+  font-size:16px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 12px rgba(0,0,0,0.15);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  opacity:0.7;transition:opacity 0.2s;
+}
+.mobile-env button.active{opacity:1;box-shadow:0 0 0 1.5px var(--env-accent),0 2px 12px rgba(0,0,0,0.2)}
 </style>
 </head>
 <body>
@@ -559,6 +588,14 @@ svg{display:block}
   </div>
 
   <div class="home-ind"></div>
+
+  <!-- mobile env switcher (desktop version is outside phone) -->
+  <div class="mobile-env" id="mobileEnv">
+    <button class="active" data-env="day" onclick="setEnv('day',this)" title="Day">🌤</button>
+    <button data-env="dawn" onclick="setEnv('dawn',this)" title="Dawn">🌅</button>
+    <button data-env="dusk" onclick="setEnv('dusk',this)" title="Dusk">🌇</button>
+    <button data-env="night" onclick="setEnv('night',this)" title="Night">🌙</button>
+  </div>
 </div><!-- /phone -->
 
 <!-- ─── ENV switcher ─── -->
@@ -588,7 +625,10 @@ function goTo(id){
 // ── Environment ──────────────────────────────
 function setEnv(env,btn){
   document.getElementById('phone').dataset.env=env;
-  document.querySelectorAll('.env-btn').forEach(b=>b.classList.toggle('active',b===btn));
+  // sync both desktop and mobile switchers
+  document.querySelectorAll('.env-btn,.mobile-env button').forEach(b=>
+    b.classList.toggle('active', b.dataset.env===env)
+  );
 }
 // ── Pillar toggle (max 3) ────────────────────
 function togglePillar(el){
