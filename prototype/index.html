@@ -301,6 +301,36 @@ svg{display:block}
 .sound-row.on .toggle{background:var(--env-accent)}
 .toggle-knob{position:absolute;top:1cqw;left:1cqw;width:5cqw;height:5cqw;border-radius:50%;background:white;transition:transform 0.22s;box-shadow:0 1px 4px rgba(0,0,0,0.2)}
 .sound-row.on .toggle-knob{transform:translateX(5cqw)}
+
+/* ── Journey selection ── */
+.journey-card{padding:4cqw 5cqw;border-radius:7cqw;border:1.5px solid var(--env-border);background:var(--env-surface);display:flex;align-items:center;gap:4cqw;cursor:pointer;transition:all 0.22s}
+.journey-card.sel{border-color:var(--env-accent);background:var(--env-accent-soft)}
+.journey-icon{width:9cqw;height:9cqw;border-radius:50%;flex-shrink:0}
+.inner-icon{background:conic-gradient(var(--env-accent) 0deg 240deg,var(--env-border) 240deg 360deg)}
+.outer-icon{background:conic-gradient(var(--env-accent) 0deg 180deg,var(--env-border) 180deg 360deg)}
+.both-icon{background:var(--env-accent)}
+.journey-card-body{flex:1}
+
+/* ── Assessment screens ── */
+.assess-header{display:flex;align-items:center;justify-content:space-between;padding-top:1cqw}
+.assess-area-label{font-size:3cqw;text-transform:uppercase;letter-spacing:0.12em;color:var(--env-text-soft);font-family:'Inter',sans-serif}
+.assess-progress-bar{height:2px;background:var(--env-border);border-radius:1px;overflow:hidden}
+.assess-progress-fill{height:100%;background:var(--env-accent);border-radius:1px;transition:width 0.4s ease}
+.assess-step-label{font-size:3.2cqw;text-transform:uppercase;letter-spacing:0.1em;color:var(--env-accent);font-family:'Inter',sans-serif;margin-bottom:3cqw;margin-top:5cqw}
+.assess-question{font-family:'Cormorant Garamond',serif;font-size:5.5cqw;line-height:1.5;font-weight:500;color:var(--env-text)}
+.assess-desc{font-size:3.2cqw;color:var(--env-text-soft);margin-top:2cqw;line-height:1.75}
+.slider-wrap{margin-top:7cqw}
+.slider-labels{display:flex;justify-content:space-between;margin-bottom:2.5cqw}
+.assess-slider{-webkit-appearance:none;appearance:none;width:100%;height:3px;background:var(--env-border);border-radius:2px;outline:none;cursor:pointer}
+.assess-slider::-webkit-slider-thumb{-webkit-appearance:none;width:7cqw;height:7cqw;border-radius:50%;background:var(--env-accent);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+.slider-val{text-align:center;font-family:'Cormorant Garamond',serif;font-size:12cqw;font-weight:600;color:var(--env-accent);margin-top:4cqw;line-height:1}
+
+/* ── Priority chips ── */
+.priority-chip{padding:4cqw 5cqw;border-radius:5cqw;border:1.5px solid var(--env-border);background:var(--env-surface);margin-bottom:2.5cqw;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:space-between}
+.priority-chip.sel{border-color:var(--env-accent);background:var(--env-accent-soft)}
+.priority-chip h4{font-family:'Cormorant Garamond',serif;font-size:4.5cqw;font-weight:600;margin-bottom:0.5cqw;color:var(--env-text)}
+.priority-chip p{font-size:3cqw;color:var(--env-text-soft)}
+.priority-score{font-family:'Cormorant Garamond',serif;font-size:7cqw;font-weight:600;color:var(--env-accent);opacity:0.7;flex-shrink:0;margin-left:3cqw}
 </style>
 </head>
 <body>
@@ -437,32 +467,82 @@ svg{display:block}
           <div class="mt3"><span class="badge badge-h">H · Habits</span><div class="t-sm t-soft mt2">Days 22–28</div></div>
         </div>
       </div>
-      <button class="btn btn-primary mt8" onclick="goTo('s-pillars')">Choose your pillars →</button>
+      <button class="btn btn-primary mt8" onclick="goTo('s-journey-select')">Choose your journey →</button>
       <div class="cent mt3"><button class="btn-text" onclick="goTo('s-atmosphere')">← Back</button></div>
     </div>
   </div>
 
-  <!-- ═══ PILLAR SELECTION ═══ -->
-  <div class="screen" id="s-pillars">
+  <!-- ═══ JOURNEY SELECT ═══ -->
+  <div class="screen" id="s-journey-select">
     <div class="status"><span>9:41</span></div>
     <div class="scroller">
-      <div class="t-label mb3">Your focus</div>
-      <div class="t-heading">What matters most<br/>to you right now?</div>
-      <div class="t-sm t-soft mt3">Choose 1–3 pillars. Your 28-day experience will be shaped around them.</div>
-      <div class="pillar-grid" id="pillarGrid">
-        <div class="pillar-chip" onclick="togglePillar(this)"><h4>Mind Mastery</h4><p>Patterns, beliefs &amp; awareness</p></div>
-        <div class="pillar-chip sel" onclick="togglePillar(this)"><h4>Clarity &amp; Decisions</h4><p>Focus and purposeful action</p></div>
-        <div class="pillar-chip" onclick="togglePillar(this)"><h4>Love &amp; Relationships</h4><p>Connection &amp; intimacy</p></div>
-        <div class="pillar-chip" onclick="togglePillar(this)"><h4>Joy &amp; Presence</h4><p>Gratitude and being here</p></div>
-        <div class="pillar-chip sel" onclick="togglePillar(this)"><h4>Physical Vitality</h4><p>Movement &amp; recovery</p></div>
-        <div class="pillar-chip" onclick="togglePillar(this)"><h4>Body &amp; Emotions</h4><p>Stress &amp; body signals</p></div>
-        <div class="pillar-chip sel" onclick="togglePillar(this)"><h4>Courage &amp; Resilience</h4><p>Pressure &amp; uncertainty</p></div>
-        <div class="pillar-chip" onclick="togglePillar(this)"><h4>Spiritual Connection</h4><p>Faith &amp; meaning</p></div>
-        <div class="pillar-chip" onclick="togglePillar(this)"><h4>Freedom &amp; Abundance</h4><p>Money &amp; possibility</p></div>
-        <div class="pillar-chip" onclick="togglePillar(this)"><h4>Leadership &amp; Legacy</h4><p>Contribution &amp; impact</p></div>
+      <div class="t-label mb2">Your Programme</div>
+      <div class="t-heading">Choose your<br/>journey.</div>
+      <div class="t-sm t-soft mt3 mb6" style="font-size:3.4cqw;line-height:1.75">The HMA 28-day programme follows two distinct paths. Begin with the one calling you most — or take both together.</div>
+      <div class="journey-card sel" id="jc-inner" onclick="pickJourney('inner',this)">
+        <div class="journey-icon inner-icon"></div>
+        <div class="journey-card-body">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:5cqw;font-weight:600;letter-spacing:0.02em">Inner Architecture™</div>
+          <div class="t-sm t-soft mt1">Master yourself — mind, faith, emotions, body, identity, presence</div>
+        </div>
       </div>
-      <button class="btn btn-primary mt8" onclick="goTo('s-today')">Begin my 28 days →</button>
+      <div class="journey-card mt3" id="jc-outer" onclick="pickJourney('outer',this)">
+        <div class="journey-icon outer-icon"></div>
+        <div class="journey-card-body">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:5cqw;font-weight:600;letter-spacing:0.02em">Outer Architecture™</div>
+          <div class="t-sm t-soft mt1">Architect your life — relationships, career, wealth, lifestyle, joy, legacy</div>
+        </div>
+      </div>
+      <div class="journey-card mt3" id="jc-both" onclick="pickJourney('both',this)">
+        <div class="journey-icon both-icon"></div>
+        <div class="journey-card-body">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:5cqw;font-weight:600;letter-spacing:0.02em">The Complete Journey</div>
+          <div class="t-sm t-soft mt1">Begin with both — the full dual-architecture experience</div>
+        </div>
+      </div>
+      <button class="btn btn-primary mt8" onclick="startAssessment()">Begin Assessment →</button>
       <div class="cent mt3"><button class="btn-text" onclick="goTo('s-onboard')">← Back</button></div>
+    </div>
+  </div>
+
+  <!-- ═══ INNER ASSESSMENT ═══ -->
+  <div class="screen" id="s-inner-assess">
+    <div class="status"><span>9:41</span></div>
+    <div class="scroller">
+      <div class="assess-header">
+        <button class="btn-text" id="ia-back-btn" onclick="goTo('s-journey-select')">← Back</button>
+        <div class="assess-area-label">Inner Architecture™</div>
+      </div>
+      <div class="assess-progress-bar mt4 mb2"><div class="assess-progress-fill" id="ia-fill" style="width:16.6%"></div></div>
+      <div id="ia-content"></div>
+      <button class="btn btn-primary mt8" id="ia-next-btn" onclick="assessNext('inner')">Next →</button>
+    </div>
+  </div>
+
+  <!-- ═══ OUTER ASSESSMENT ═══ -->
+  <div class="screen" id="s-outer-assess">
+    <div class="status"><span>9:41</span></div>
+    <div class="scroller">
+      <div class="assess-header">
+        <button class="btn-text" id="oa-back-btn" onclick="goTo('s-journey-select')">← Back</button>
+        <div class="assess-area-label">Outer Architecture™</div>
+      </div>
+      <div class="assess-progress-bar mt4 mb2"><div class="assess-progress-fill" id="oa-fill" style="width:16.6%"></div></div>
+      <div id="oa-content"></div>
+      <button class="btn btn-primary mt8" id="oa-next-btn" onclick="assessNext('outer')">Next →</button>
+    </div>
+  </div>
+
+  <!-- ═══ PRIORITIES ═══ -->
+  <div class="screen" id="s-priorities">
+    <div class="status"><span>9:41</span></div>
+    <div class="scroller">
+      <div class="t-label mb3">Almost there</div>
+      <div class="t-heading">Choose your<br/>focus pillar.</div>
+      <div class="t-sm t-soft mt3 mb6" style="font-size:3.4cqw;line-height:1.75">Not necessarily your lowest score — the pillar you most want to transform in the next 28 days.</div>
+      <div id="priority-list"></div>
+      <button class="btn btn-primary mt8" onclick="goTo('s-today')">Begin my 28 days →</button>
+      <div class="cent mt3"><button class="btn-text" onclick="priorityBack()">← Back</button></div>
     </div>
   </div>
 
@@ -763,6 +843,109 @@ function togglePillar(el){
   const sel=grid.querySelectorAll('.sel');
   if(el.classList.contains('sel')){el.classList.remove('sel')}
   else if(sel.length<3){el.classList.add('sel')}
+}
+
+// ── Journey & Assessment ──────────────────────
+let journeyMode='inner';
+let innerStep=0;
+let outerStep=0;
+const iaScores=[5,5,5,5,5,5];
+const oaScores=[5,5,5,5,5,5];
+
+const INNER_PILLARS=[
+  {name:'Spirituality & Faith',desc:'Connection to God, faith or your chosen source of meaning and purpose',q:'How connected do you feel to God, your faith, or your own source of spiritual meaning?'},
+  {name:'Mind & Beliefs',desc:'Thought patterns, self-worth, mindset',q:'How clear and focused is your mind throughout the day?'},
+  {name:'Emotional Mastery',desc:'Responses to fear, stress and pressure',q:'How effectively do you respond to pressure and difficult emotions?'},
+  {name:'Physical Vitality',desc:'Sleep, nourishment, movement, energy',q:'How satisfied are you with your physical energy, sleep and wellbeing?'},
+  {name:'Identity & Values',desc:'Authenticity, purpose, personal standards',q:'How closely do your daily choices reflect your personal values?'},
+  {name:'Cognitive Capacity',desc:'Focus, resilience, decisions, presence',q:'How confidently and presently do you make important decisions?'},
+];
+const OUTER_PILLARS=[
+  {name:'Relationships & Family',desc:'Love, communication, connection',q:'How fulfilled are you by your relationships and family life?'},
+  {name:'Career & Leadership',desc:'Professional purpose, influence, performance',q:'How aligned is your professional life with your ambitions?'},
+  {name:'Wealth & Freedom',desc:'Financial direction, choices, resources',q:'How satisfied are you with your financial direction and freedom?'},
+  {name:'Lifestyle & Environment',desc:'Home, routines, surroundings',q:'How well does your lifestyle support the person you wish to become?'},
+  {name:'Experiences & Joy',desc:'Adventure, learning, enjoyment',q:'How much joy and meaningful experience do you create in your life?'},
+  {name:'Contribution & Legacy',desc:'Service, impact, long-term vision',q:'How clear is the impact and legacy you wish to build?'},
+];
+
+function pickJourney(val,el){
+  journeyMode=val;
+  document.querySelectorAll('.journey-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function startAssessment(){
+  innerStep=0; outerStep=0;
+  if(journeyMode==='outer'){
+    renderAssessCard('outer',0);
+    goTo('s-outer-assess');
+  } else {
+    renderAssessCard('inner',0);
+    goTo('s-inner-assess');
+  }
+}
+
+function renderAssessCard(area,step){
+  const pillars=area==='inner'?INNER_PILLARS:OUTER_PILLARS;
+  const scores=area==='inner'?iaScores:oaScores;
+  const pre=area==='inner'?'ia':'oa';
+  const p=pillars[step];
+  const pct=((step+1)/6*100).toFixed(1);
+  document.getElementById(pre+'-fill').style.width=pct+'%';
+  const scr=scores[step];
+  document.getElementById(pre+'-content').innerHTML=
+    '<div class="assess-step-label">'+p.name+' &nbsp;·&nbsp; '+(step+1)+' of 6</div>'+
+    '<div class="assess-question">'+p.q+'</div>'+
+    '<div class="assess-desc">'+p.desc+'</div>'+
+    '<div class="slider-wrap">'+
+      '<div class="slider-labels"><span class="t-sm t-soft">1 — Not at all</span><span class="t-sm t-soft">10 — Fully</span></div>'+
+      '<input type="range" class="assess-slider" id="'+pre+'-sl" min="1" max="10" value="'+scr+'" '+
+        'oninput="document.getElementById(\''+pre+'-sv\').textContent=this.value;'+(area==='inner'?'ia':'oa')+'Scores['+step+']=+this.value">'+
+      '<div class="slider-val" id="'+pre+'-sv">'+scr+'</div>'+
+    '</div>';
+  const backBtn=document.getElementById(pre+'-back-btn');
+  if(step===0&&area==='inner') backBtn.onclick=function(){goTo('s-journey-select')};
+  else if(step===0&&area==='outer'&&journeyMode==='both') backBtn.onclick=function(){innerStep=5;renderAssessCard('inner',5);goTo('s-inner-assess')};
+  else if(step===0) backBtn.onclick=function(){goTo('s-journey-select')};
+  else backBtn.onclick=(function(a,s){return function(){if(a==='inner'){innerStep=s-1;renderAssessCard('inner',s-1)}else{outerStep=s-1;renderAssessCard('outer',s-1)}}})(area,step);
+  const nextBtn=document.getElementById(pre+'-next-btn');
+  if(step===5){
+    nextBtn.textContent=(area==='inner'&&journeyMode==='both')?'Continue to Outer →':'Continue →';
+  } else {
+    nextBtn.textContent='Next →';
+  }
+}
+
+function assessNext(area){
+  const step=area==='inner'?innerStep:outerStep;
+  if(step<5){
+    if(area==='inner'){innerStep++;renderAssessCard('inner',innerStep);}
+    else{outerStep++;renderAssessCard('outer',outerStep);}
+  } else {
+    if(area==='inner'&&journeyMode==='both'){
+      outerStep=0;renderAssessCard('outer',0);goTo('s-outer-assess');
+    } else {
+      renderPriorityList();goTo('s-priorities');
+    }
+  }
+}
+
+function renderPriorityList(){
+  const pillars=journeyMode==='outer'?OUTER_PILLARS:INNER_PILLARS;
+  const scores=journeyMode==='outer'?oaScores:iaScores;
+  document.getElementById('priority-list').innerHTML=
+    pillars.map(function(p,i){
+      return '<div class="priority-chip'+(i===0?' sel':'')+'" onclick="document.querySelectorAll(\'.priority-chip\').forEach(function(c){c.classList.remove(\'sel\')});this.classList.add(\'sel\')">'+
+        '<div><h4>'+p.name+'</h4><p>'+p.desc+'</p></div>'+
+        '<div class="priority-score">'+scores[i]+'</div>'+
+      '</div>';
+    }).join('');
+}
+
+function priorityBack(){
+  if(journeyMode==='outer'){outerStep=5;renderAssessCard('outer',5);goTo('s-outer-assess');}
+  else{innerStep=5;renderAssessCard('inner',5);goTo('s-inner-assess');}
 }
 // ── Check-in ─────────────────────────────────
 function toggleCheckin(el){el.classList.toggle('sel')}
