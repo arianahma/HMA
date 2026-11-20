@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HMA — The Human Mastery Architecture™</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#C8A96E;
+  --gold-lt:#E8D090;
+  --gold-soft:rgba(200,169,110,0.18);
+  --gold-border:rgba(200,169,110,0.28);
+  --card:rgba(10,16,10,0.72);
+  --card2:rgba(15,22,12,0.85);
+  --text:#F5EDD8;
+  --text-soft:rgba(245,237,216,0.58);
+  --text-muted:rgba(245,237,216,0.35);
+  --sidebar-w:220px;
+}
+html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);overflow:hidden}
+
+/* ── BACKGROUNDS ─────────────────────── */
+.bg-forest{background:
+  radial-gradient(ellipse at 25% 65%,rgba(40,80,15,0.70) 0%,transparent 55%),
+  radial-gradient(ellipse at 75% 30%,rgba(90,60,10,0.45) 0%,transparent 45%),
+  radial-gradient(ellipse at 50% 100%,rgba(20,40,8,0.9) 0%,transparent 50%),
+  linear-gradient(168deg,#0a1408 0%,#111f0a 30%,#0e1808 55%,#1a1005 80%,#0d0c05 100%)}
+.bg-moon{background:
+  radial-gradient(ellipse at 50% 15%,rgba(200,210,255,0.12) 0%,transparent 35%),
+  radial-gradient(ellipse at 50% 90%,rgba(5,10,25,0.95) 0%,transparent 55%),
+  linear-gradient(180deg,#04080f 0%,#080d1a 45%,#050810 100%)}
+.bg-warm{background:
+  radial-gradient(ellipse at 40% 70%,rgba(80,45,8,0.65) 0%,transparent 55%),
+  radial-gradient(ellipse at 60% 20%,rgba(30,55,10,0.60) 0%,transparent 50%),
+  linear-gradient(160deg,#0a0f04 0%,#171208 45%,#1a1005 100%)}
+
+/* ── SCREENS ─────────────────────────── */
+.screen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity 0.4s ease}
+.screen.active{display:flex;opacity:1}
+.screen.app-screen{flex-direction:row;align-items:stretch;justify-content:flex-start}
+
+/* ── SIDEBAR ─────────────────────────── */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:rgba(6,12,6,0.88);border-right:1px solid var(--gold-border);display:flex;flex-direction:column;padding:28px 0 20px}
+.sidebar-logo{display:flex;align-items:center;gap:10px;padding:0 22px 28px;border-bottom:1px solid var(--gold-border)}
+.sidebar-logo svg{width:28px;height:28px}
+.sidebar-logo-text{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--gold);letter-spacing:0.08em}
+.nav-items{flex:1;padding:20px 0}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 22px;cursor:pointer;transition:all 0.2s;font-size:13.5px;color:var(--text-soft);letter-spacing:0.02em}
+.nav-item:hover{color:var(--text);background:rgba(200,169,110,0.08)}
+.nav-item.active{color:var(--gold);background:rgba(200,169,110,0.12);border-right:2px solid var(--gold)}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;opacity:0.7}
+.nav-item.active svg{opacity:1}
+.sidebar-avatar{padding:0 22px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.avatar-circle{width:36px;height:36px;border-radius:50%;background:var(--gold-soft);border:1.5px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--gold)}
+.avatar-name{font-size:12.5px;color:var(--text-soft)}
+
+/* ── MAIN CONTENT AREA ───────────────── */
+.main-content{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
+.main-content::-webkit-scrollbar{width:0}
+
+/* ── PAGE PANELS (inside main-content) ── */
+.panel{display:none;min-height:100%;padding:40px 48px;position:relative;flex-direction:column}
+.panel.active{display:flex}
+.panel-bg{position:absolute;inset:0;z-index:0}
+.panel-body{position:relative;z-index:1;flex:1}
+
+/* ── TYPOGRAPHY ──────────────────────── */
+.t-serif{font-family:'Cormorant Garamond',serif}
+.t-display{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:500;line-height:1.15;color:var(--gold-lt)}
+.t-h1{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:500;line-height:1.2}
+.t-h2{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500;line-height:1.3}
+.t-h3{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500}
+.t-gold{color:var(--gold)}
+.t-soft{color:var(--text-soft)}
+.t-sm{font-size:13px;line-height:1.65}
+.t-xs{font-size:11.5px;letter-spacing:0.06em;text-transform:uppercase}
+.t-label{font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:var(--gold);font-family:'Inter',sans-serif}
+
+/* ── CARDS ───────────────────────────── */
+.card{background:var(--card);border:1px solid var(--gold-border);border-radius:16px;padding:28px 32px}
+.card-sm{background:var(--card);border:1px solid var(--gold-border);border-radius:12px;padding:20px 24px}
+
+/* ── BUTTONS ─────────────────────────── */
+.btn-gold{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#C8A96E,#A88040);color:#1a0f05;font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:0.04em;border:none;border-radius:50px;padding:14px 36px;cursor:pointer;transition:all 0.22s;text-decoration:none}
+.btn-gold:hover{background:linear-gradient(135deg,#E8C980,#C8A96E);transform:translateY(-1px)}
+.btn-outline{display:inline-flex;align-items:center;justify-content:center;background:transparent;color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500;letter-spacing:0.03em;border:1px solid var(--gold-border);border-radius:50px;padding:12px 28px;cursor:pointer;transition:all 0.22s}
+.btn-outline:hover{background:var(--gold-soft);border-color:var(--gold)}
+.btn-text{background:none;border:none;color:var(--text-soft);font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;padding:4px 0;transition:color 0.2s}
+.btn-text:hover{color:var(--text)}
+
+/* ── FORM INPUTS ──────────────────────── */
+.input-wrap{position:relative;margin-bottom:14px}
+.input-wrap svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-soft)}
+.form-input{width:100%;background:rgba(255,255,255,0.07);border:1px solid var(--gold-border);border-radius:10px;padding:14px 16px 14px 44px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s}
+.form-input::placeholder{color:var(--text-muted)}
+.form-input:focus{border-color:var(--gold)}
+
+/* ── EXPERIENCE CARDS ────────────────── */
+.exp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
+.exp-card{border:2px solid var(--gold-border);border-radius:16px;overflow:hidden;cursor:pointer;transition:all 0.25s;position:relative}
+.exp-card.sel{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 8px 32px rgba(200,169,110,0.2)}
+.exp-photo{height:200px;position:relative}
+.exp-photo-forest{background:radial-gradient(ellipse at 40% 60%,#2d5a10,#0a1a04)}
+.exp-photo-neutral{background:radial-gradient(ellipse at 50% 50%,#2a3020,#121810)}
+.exp-photo-masc{background:radial-gradient(ellipse at 60% 40%,#20252a,#0a0d10)}
+.exp-info{padding:20px;background:var(--card2)}
+.exp-info h3{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:var(--gold-lt);margin-bottom:6px}
+.exp-info p{font-size:12.5px;color:var(--text-soft);line-height:1.6}
+.exp-radio{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--gold-border);display:flex;align-items:center;justify-content:center;margin-top:12px;transition:all 0.2s}
+.exp-card.sel .exp-radio{border-color:var(--gold);background:var(--gold)}
+.exp-radio-dot{width:10px;height:10px;border-radius:50%;background:white;opacity:0;transition:opacity 0.2s}
+.exp-card.sel .exp-radio-dot{opacity:1}
+
+/* ── SOUND TOGGLES ───────────────────── */
+.sound-row{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:10px;border:1px solid var(--gold-border);background:rgba(10,16,8,0.6);margin-bottom:10px;cursor:pointer;transition:border-color 0.2s}
+.sound-row.on{border-color:rgba(200,169,110,0.5)}
+.sound-row-name{flex:1;font-size:14px;color:var(--text)}
+.toggle{width:48px;height:26px;border-radius:13px;background:rgba(255,255,255,0.12);position:relative;flex-shrink:0;transition:background 0.22s;cursor:pointer}
+.sound-row.on .toggle{background:var(--gold)}
+.toggle-knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:white;transition:transform 0.22s;box-shadow:0 1px 4px rgba(0,0,0,0.3)}
+.sound-row.on .toggle-knob{transform:translateX(22px)}
+.vol-slider{width:100%;height:3px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,0.15);border-radius:2px;outline:none;cursor:pointer}
+.vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
+
+/* ── ARCH PHASES ─────────────────────── */
+.arch-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.arch-box{background:var(--card);border:1px solid var(--gold-border);border-radius:12px;padding:20px 16px;text-align:center;cursor:pointer;transition:all 0.2s}
+.arch-box:hover{border-color:var(--gold);background:var(--gold-soft)}
+.arch-box.active{border-color:var(--gold);background:var(--gold-soft)}
+.arch-letter{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;color:var(--gold);line-height:1}
+.arch-name{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--text);margin-top:6px}
+.arch-days{font-size:11px;color:var(--text-soft);margin-top:3px;text-transform:uppercase;letter-spacing:0.08em}
+
+/* ── DAY RING ────────────────────────── */
+.day-ring{position:relative;width:100px;height:100px;flex-shrink:0}
+.day-ring svg{transform:rotate(-90deg)}
+.day-ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.day-ring-num{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--gold);line-height:1}
+.day-ring-total{font-size:11px;color:var(--text-soft)}
+
+/* ── CHECKLIST ───────────────────────── */
+.check-item{display:flex;align-items:center;gap:14px;padding:16px 20px;border-radius:10px;border:1px solid var(--gold-border);background:rgba(10,16,8,0.6);margin-bottom:10px;cursor:pointer;transition:all 0.2s}
+.check-item:hover{border-color:rgba(200,169,110,0.5)}
+.check-item.done{background:var(--gold-soft);border-color:rgba(200,169,110,0.5)}
+.check-circle{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--gold-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s}
+.check-item.done .check-circle{background:var(--gold);border-color:var(--gold)}
+.check-name{flex:1;font-size:14px;font-weight:400}
+.check-time{font-size:12px;color:var(--text-soft)}
+
+/* ── VIDEO PLAYER MOCK ───────────────── */
+.video-wrap{border-radius:12px;overflow:hidden;background:#0a0f04;position:relative;aspect-ratio:16/9}
+.video-bg{width:100%;height:100%;background:radial-gradient(ellipse at 40% 60%,#1a3010,#050a04);display:flex;align-items:center;justify-content:center}
+.play-btn{width:56px;height:56px;border-radius:50%;background:rgba(200,169,110,0.9);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.play-btn svg{width:20px;height:20px;margin-left:3px;fill:#1a0f05}
+.video-time{position:absolute;bottom:14px;left:16px;font-size:12px;color:rgba(255,255,255,0.7)}
+
+/* ── MEDITATION CARDS ────────────────── */
+.med-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px}
+.med-card{border-radius:14px;overflow:hidden;cursor:pointer;transition:transform 0.2s;border:1px solid var(--gold-border)}
+.med-card:hover{transform:translateY(-3px)}
+.med-thumb{height:130px;position:relative}
+.med-thumb-1{background:radial-gradient(ellipse at 50% 60%,#1a4a30,#040a06)}
+.med-thumb-2{background:radial-gradient(ellipse at 40% 50%,#2a3a10,#080a04)}
+.med-thumb-3{background:radial-gradient(ellipse at 60% 40%,#3a2a08,#0a0804)}
+.med-thumb-4{background:radial-gradient(ellipse at 50% 70%,#0a0a1a,#040408)}
+.med-thumb-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.med-thumb-play svg{width:28px;height:28px;fill:rgba(200,169,110,0.8)}
+.med-info{padding:14px 16px;background:var(--card2)}
+.med-info h4{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold-lt)}
+.med-info p{font-size:11.5px;color:var(--text-soft);margin-top:3px}
+.filter-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.filter-tab{padding:7px 16px;border-radius:50px;border:1px solid var(--gold-border);background:transparent;color:var(--text-soft);font-size:12.5px;cursor:pointer;transition:all 0.2s}
+.filter-tab.active,.filter-tab:hover{background:var(--gold-soft);border-color:var(--gold);color:var(--gold)}
+
+/* ── JOURNAL ─────────────────────────── */
+.journal-entry{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-radius:10px;border:1px solid var(--gold-border);background:rgba(10,16,8,0.5);margin-bottom:10px;cursor:pointer;transition:all 0.2s}
+.journal-entry:hover{border-color:rgba(200,169,110,0.5);background:var(--gold-soft)}
+.journal-entry-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500}
+.journal-entry svg{width:16px;height:16px;color:var(--text-soft)}
+
+/* ── WISDOM CARDS ────────────────────── */
+.wisdom-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
+.wisdom-card{border-radius:14px;overflow:hidden;cursor:pointer;transition:all 0.2s;border:1px solid var(--gold-border)}
+.wisdom-card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.wisdom-photo{height:150px;display:flex;align-items:center;justify-content:center;position:relative}
+.wp-bible{background:linear-gradient(160deg,#0a1f0a,#1a3010)}
+.wp-stoic{background:linear-gradient(160deg,#1a150a,#2a2010)}
+.wp-islam{background:linear-gradient(160deg,#0a1020,#101a30)}
+.wisdom-icon{font-size:36px;opacity:0.7}
+.wisdom-info{padding:16px 18px;background:var(--card2)}
+.wisdom-info h4{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--gold-lt)}
+.wisdom-info p{font-size:12px;color:var(--text-soft);margin-top:4px}
+
+/* ── PROGRESS ────────────────────────── */
+.progress-bar-row{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.progress-bar-label{font-size:13px;width:140px;flex-shrink:0;color:var(--text-soft)}
+.progress-bar-track{flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-lt));border-radius:2px;transition:width 0.6s ease}
+
+/* ── GRID HELPERS ─────────────────────── */
+.row{display:flex;align-items:center}
+.col{display:flex;flex-direction:column}
+.gap-sm{gap:8px}
+.gap-md{gap:16px}
+.gap-lg{gap:24px}
+.mt-sm{margin-top:12px}
+.mt-md{margin-top:24px}
+.mt-lg{margin-top:40px}
+.mb-sm{margin-bottom:12px}
+.mb-md{margin-bottom:24px}
+.flex-1{flex:1}
+.text-center{text-align:center}
+
+/* ── DIVIDER ─────────────────────────── */
+.divider{height:1px;background:var(--gold-border);margin:24px 0}
+
+/* ── SCROLL ───────────────────────────── */
+.main-content{scrollbar-width:none}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 1 — SPLASH
+══════════════════════════════════════════ -->
+<div class="screen bg-forest active" id="s-splash">
+  <div style="text-align:center;max-width:480px;padding:0 24px">
+    <!-- HMA Leaf Logo -->
+    <div style="margin-bottom:28px;display:flex;justify-content:center">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <path d="M32 8 C18 20 12 36 20 50 C24 44 28 36 30 28 C34 36 36 44 44 50 C52 36 46 20 32 8Z" fill="none" stroke="#C8A96E" stroke-width="1.5"/>
+        <line x1="32" y1="10" x2="32" y2="52" stroke="#C8A96E" stroke-width="1" opacity="0.6"/>
+        <path d="M22 32 C26 30 30 29 32 28" stroke="#C8A96E" stroke-width="0.8" opacity="0.5"/>
+        <path d="M42 32 C38 30 34 29 32 28" stroke="#C8A96E" stroke-width="0.8" opacity="0.5"/>
+      </svg>
+    </div>
+    <div class="t-label mb-sm" style="margin-bottom:10px">The Human Mastery Architecture™</div>
+    <div class="t-display" style="margin-bottom:16px">HMA</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:400;color:var(--text-soft);letter-spacing:0.04em;margin-bottom:10px">Your Human Mastery Architecture™</div>
+    <div style="font-size:13.5px;color:var(--text-soft);line-height:1.8;margin-bottom:40px">A 28-Day Private Online Journey<br/>to Clarity · Capacity · Mastery · Legacy</div>
+    <button class="btn-gold" onclick="goTo('s-signin')">Begin Your Journey →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 2 — SIGN IN
+══════════════════════════════════════════ -->
+<div class="screen bg-warm" id="s-signin">
+  <div style="width:100%;max-width:400px;padding:0 24px">
+    <div class="text-center" style="margin-bottom:36px">
+      <svg width="36" height="36" viewBox="0 0 64 64" fill="none" style="margin-bottom:14px">
+        <path d="M32 8 C18 20 12 36 20 50 C24 44 28 36 30 28 C34 36 36 44 44 50 C52 36 46 20 32 8Z" fill="none" stroke="#C8A96E" stroke-width="1.5"/>
+        <line x1="32" y1="10" x2="32" y2="52" stroke="#C8A96E" stroke-width="1" opacity="0.6"/>
+      </svg>
+      <div class="t-h1" style="color:var(--gold-lt)">Welcome, Architect</div>
+    </div>
+    <div class="card" style="padding:36px">
+      <div class="input-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <input class="form-input" type="email" placeholder="Email">
+      </div>
+      <div class="input-wrap" style="margin-bottom:24px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <input class="form-input" type="password" placeholder="Password" style="padding-right:44px">
+      </div>
+      <button class="btn-gold" style="width:100%" onclick="goTo('s-experience')">Log In</button>
+      <div class="text-center mt-sm">
+        <button class="btn-text" style="font-size:13px;margin-right:20px">Forgot password?</button>
+        <button class="btn-text" style="font-size:13px">Create Account</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 3 — CHOOSE YOUR EXPERIENCE
+══════════════════════════════════════════ -->
+<div class="screen bg-forest" id="s-experience" style="padding:48px">
+  <div style="max-width:900px;width:100%">
+    <div class="text-center mb-md">
+      <div class="t-label mb-sm">Step 1</div>
+      <div class="t-h1" style="color:var(--gold-lt)">Choose Your Experience</div>
+      <div style="font-size:14px;color:var(--text-soft);margin-top:10px">A personalised environment for your 28-day journey</div>
+    </div>
+    <div class="exp-grid">
+      <div class="exp-card sel" id="ec-immersive" onclick="pickExp('immersive',this)">
+        <div class="exp-photo exp-photo-forest"></div>
+        <div class="exp-info">
+          <h3>Immersive</h3>
+          <p>Nature-rich, sensory and fully immersive</p>
+          <div class="exp-radio"><div class="exp-radio-dot"></div></div>
+        </div>
+      </div>
+      <div class="exp-card" id="ec-neutral" onclick="pickExp('neutral',this)">
+        <div class="exp-photo exp-photo-neutral"></div>
+        <div class="exp-info">
+          <h3>Neutral</h3>
+          <p>Clean, calm and focused</p>
+          <div class="exp-radio"><div class="exp-radio-dot"></div></div>
+        </div>
+      </div>
+      <div class="exp-card" id="ec-masc" onclick="pickExp('masculine',this)">
+        <div class="exp-photo exp-photo-masc"></div>
+        <div class="exp-info">
+          <h3>Masculine</h3>
+          <p>Strong, grounded and performance-led</p>
+          <div class="exp-radio"><div class="exp-radio-dot"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-lg">
+      <button class="btn-gold" onclick="goTo('s-atmosphere')">Continue →</button>
+      <div style="margin-top:12px"><button class="btn-text" onclick="goTo('s-signin')">← Back</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 4 — SET YOUR ATMOSPHERE
+══════════════════════════════════════════ -->
+<div class="screen bg-forest" id="s-atmosphere" style="padding:48px">
+  <div style="max-width:720px;width:100%">
+    <div class="text-center mb-md">
+      <div class="t-label mb-sm">Step 2</div>
+      <div class="t-h1" style="color:var(--gold-lt)">Set Your Atmosphere</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+      <div>
+        <div class="t-label mb-sm" style="margin-bottom:14px">Nature Sounds</div>
+        <div class="sound-row on" onclick="this.classList.toggle('on')">
+          <span style="font-size:16px">🌿</span>
+          <span class="sound-row-name">Forest &amp; Birds</span>
+          <div class="toggle"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="sound-row" onclick="this.classList.toggle('on')">
+          <span style="font-size:16px">💧</span>
+          <span class="sound-row-name">Waterfall &amp; River</span>
+          <div class="toggle"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="sound-row" onclick="this.classList.toggle('on')">
+          <span style="font-size:16px">🌊</span>
+          <span class="sound-row-name">Ocean &amp; Waves</span>
+          <div class="toggle"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="sound-row" onclick="this.classList.toggle('on')">
+          <span style="font-size:16px">🔥</span>
+          <span class="sound-row-name">Fire &amp; Hearth</span>
+          <div class="toggle"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="sound-row" onclick="this.classList.toggle('on')">
+          <span style="font-size:16px">🌙</span>
+          <span class="sound-row-name">Night &amp; Stars</span>
+          <div class="toggle"><div class="toggle-knob"></div></div>
+        </div>
+        <div style="margin-top:20px;padding:16px 20px;border-radius:10px;background:rgba(10,16,8,0.4);border:1px solid var(--gold-border)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            <span class="t-xs" style="color:var(--text-soft)">Volume</span>
+          </div>
+          <input type="range" class="vol-slider" value="65">
+        </div>
+      </div>
+      <div>
+        <div class="t-label mb-sm" style="margin-bottom:14px">Binaural Focus</div>
+        <div class="sound-row on" onclick="this.classList.toggle('on')">
+          <span class="sound-row-name">Deep Focus 40 Hz</span>
+          <div class="toggle"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="sound-row" onclick="this.classList.toggle('on')">
+          <span class="sound-row-name">Creativity 12 Hz</span>
+          <div class="toggle"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="sound-row" onclick="this.classList.toggle('on')">
+          <span class="sound-row-name">Calm &amp; Balance 8 Hz</span>
+          <div class="toggle"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="sound-row" onclick="this.classList.toggle('on')">
+          <span class="sound-row-name">Sleep &amp; Recovery 4 Hz</span>
+          <div class="toggle"><div class="toggle-knob"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-lg">
+      <button class="btn-gold" onclick="goApp('p-dashboard')">Continue →</button>
+      <div style="margin-top:12px"><button class="btn-text" onclick="goTo('s-experience')">← Back</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     APP SHELL (screens 5–12 — sidebar layout)
+══════════════════════════════════════════ -->
+<div class="screen app-screen bg-forest" id="s-app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg viewBox="0 0 64 64" fill="none">
+        <path d="M32 8 C18 20 12 36 20 50 C24 44 28 36 30 28 C34 36 36 44 44 50 C52 36 46 20 32 8Z" fill="none" stroke="#C8A96E" stroke-width="1.5"/>
+        <line x1="32" y1="10" x2="32" y2="52" stroke="#C8A96E" stroke-width="1" opacity="0.6"/>
+      </svg>
+      <span class="sidebar-logo-text">HMA</span>
+    </div>
+    <nav class="nav-items">
+      <div class="nav-item active" id="nav-dashboard" onclick="goApp('p-dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+      </div>
+      <div class="nav-item" id="nav-journey" onclick="goApp('p-today')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        My Journey
+      </div>
+      <div class="nav-item" id="nav-meditations" onclick="goApp('p-meditations')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        Meditations
+      </div>
+      <div class="nav-item" id="nav-journal" onclick="goApp('p-journal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Journal
+      </div>
+      <div class="nav-item" id="nav-wisdom" onclick="goApp('p-wisdom')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Wisdom Cards
+      </div>
+      <div class="nav-item" id="nav-progress" onclick="goApp('p-progress')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Progress
+      </div>
+      <div class="nav-item" id="nav-vision" onclick="goApp('p-vision')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+        Resources
+      </div>
+      <div class="nav-item" id="nav-sessions" onclick="goApp('p-sessions')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        My Sessions
+      </div>
+    </nav>
+    <div class="sidebar-avatar">
+      <div class="avatar-circle">A</div>
+      <span class="avatar-name">Ariana</span>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- PANEL: DASHBOARD ─────────────────── -->
+    <div class="panel bg-forest active" id="p-dashboard">
+      <div class="panel-bg bg-forest"></div>
+      <div class="panel-body">
+        <div class="row gap-md" style="align-items:flex-start;margin-bottom:32px">
+          <div class="flex-1">
+            <div class="t-label mb-sm">Wednesday · 20 November 2026</div>
+            <div class="t-h1" style="font-size:40px;color:var(--gold-lt)">Good Morning, Architect</div>
+            <div style="font-size:14.5px;color:var(--text-soft);margin-top:10px;line-height:1.7">A new day to build a calmer, clearer and more<br/>aligned version of you.</div>
+          </div>
+          <div class="day-ring">
+            <svg width="100" height="100" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(200,169,110,0.15)" stroke-width="6"/>
+              <circle cx="50" cy="50" r="42" fill="none" stroke="#C8A96E" stroke-width="6" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="181"/>
+            </svg>
+            <div class="day-ring-label">
+              <div class="day-ring-num">7</div>
+              <div class="day-ring-total">/ 28</div>
+              <div style="font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px">Day</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-md">
+          <div class="t-label mb-sm">ARCH™ Journey</div>
+          <div class="arch-row">
+            <div class="arch-box active">
+              <div class="arch-letter">A</div>
+              <div class="arch-name">Awareness</div>
+              <div class="arch-days">Days 1–7</div>
+            </div>
+            <div class="arch-box">
+              <div class="arch-letter">R</div>
+              <div class="arch-name">Realign</div>
+              <div class="arch-days">Days 8–14</div>
+            </div>
+            <div class="arch-box">
+              <div class="arch-letter">C</div>
+              <div class="arch-name">Capacity</div>
+              <div class="arch-days">Days 15–21</div>
+            </div>
+            <div class="arch-box">
+              <div class="arch-letter">H</div>
+              <div class="arch-name">Habits</div>
+              <div class="arch-days">Days 22–28</div>
+            </div>
+          </div>
+          <div style="margin-top:28px">
+            <button class="btn-gold" onclick="goApp('p-today')">Continue Today's Experience →</button>
+          </div>
+        </div>
+
+        <!-- Quick links row -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <div class="card-sm" style="cursor:pointer" onclick="goApp('p-journal')">
+            <div class="t-label mb-sm">My Journal</div>
+            <div class="t-h3" style="font-size:17px;color:var(--text-soft)">Today's reflection awaits</div>
+          </div>
+          <div class="card-sm" style="cursor:pointer" onclick="goApp('p-wisdom')">
+            <div class="t-label mb-sm">Wisdom Cards</div>
+            <div class="t-h3" style="font-size:17px;color:var(--text-soft)">Daily inspiration</div>
+          </div>
+          <div class="card-sm" style="cursor:pointer" onclick="goApp('p-sessions')">
+            <div class="t-label mb-sm">Private Sessions</div>
+            <div class="t-h3" style="font-size:17px;color:var(--text-soft)">Next session: Thursday</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL: TODAY'S EXPERIENCE ─────────── -->
+    <div class="panel bg-forest" id="p-today">
+      <div class="panel-bg bg-forest"></div>
+      <div class="panel-body">
+        <div class="t-label mb-sm">Day 7 of 28</div>
+        <div class="t-h1" style="color:var(--gold-lt);margin-bottom:4px">Today's Experience – Day 7</div>
+        <div style="font-size:14px;color:var(--text-soft);margin-bottom:28px;text-transform:uppercase;letter-spacing:0.1em">Awareness — See Yourself Clearly</div>
+        <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:28px">
+          <!-- Checklist -->
+          <div>
+            <div class="check-item done" onclick="this.classList.toggle('done')">
+              <div class="check-circle"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <span class="check-name">Arrival &amp; Breath</span>
+              <span class="check-time">5 min</span>
+            </div>
+            <div class="check-item" onclick="this.classList.toggle('done')">
+              <div class="check-circle"></div>
+              <span class="check-name">Daily Insight</span>
+              <span class="check-time">10 min</span>
+            </div>
+            <div class="check-item" onclick="this.classList.toggle('done')">
+              <div class="check-circle"></div>
+              <span class="check-name">Reflection</span>
+              <span class="check-time">10 min</span>
+            </div>
+            <div class="check-item" onclick="this.classList.toggle('done')">
+              <div class="check-circle"></div>
+              <span class="check-name">Today's Action</span>
+              <span class="check-time">5 min</span>
+            </div>
+            <div class="check-item" onclick="this.classList.toggle('done')">
+              <div class="check-circle"></div>
+              <span class="check-name">Integration</span>
+              <span class="check-time">5 min</span>
+            </div>
+          </div>
+          <!-- Video + side panel -->
+          <div>
+            <div class="video-wrap mb-md">
+              <div class="video-bg">
+                <div class="play-btn"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              </div>
+              <div class="video-time">10:24</div>
+            </div>
+            <div class="card-sm">
+              <div class="t-label mb-sm">Today's Focus</div>
+              <div style="font-size:14.5px;line-height:1.75;color:var(--text-soft);margin-bottom:16px">What part of me is ready to be seen, healed or released?</div>
+              <div class="divider" style="margin:12px 0"></div>
+              <div class="row gap-sm mb-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <div class="t-label">Action for Today</div>
+              </div>
+              <div style="font-size:13.5px;color:var(--text-soft);line-height:1.7">Take one conscious action that brings me closer to who I truly am.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL: MEDITATION LIBRARY ─────────── -->
+    <div class="panel bg-forest" id="p-meditations">
+      <div class="panel-bg bg-forest"></div>
+      <div class="panel-body">
+        <div class="t-label mb-sm">Your Library</div>
+        <div class="t-h1" style="color:var(--gold-lt);margin-bottom:24px">Meditation Library</div>
+        <div class="filter-tabs mb-md">
+          <div class="filter-tab active">All</div>
+          <div class="filter-tab">Energy</div>
+          <div class="filter-tab">Focus</div>
+          <div class="filter-tab">Emotional Balance</div>
+          <div class="filter-tab">Sleep</div>
+          <div class="filter-tab">Abundance</div>
+        </div>
+        <div class="med-grid">
+          <div class="med-card">
+            <div class="med-thumb med-thumb-1"><div class="med-thumb-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
+            <div class="med-info"><h4>Inner Clarity</h4><p>12 min</p></div>
+          </div>
+          <div class="med-card">
+            <div class="med-thumb med-thumb-2"><div class="med-thumb-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
+            <div class="med-info"><h4>Resilience</h4><p>15 min</p></div>
+          </div>
+          <div class="med-card">
+            <div class="med-thumb med-thumb-3"><div class="med-thumb-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
+            <div class="med-info"><h4>Abundance</h4><p>18 min</p></div>
+          </div>
+          <div class="med-card">
+            <div class="med-thumb med-thumb-4"><div class="med-thumb-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div></div>
+            <div class="med-info"><h4>Sleep &amp; Recovery</h4><p>20 min</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL: JOURNAL ─────────────────────── -->
+    <div class="panel bg-warm" id="p-journal">
+      <div class="panel-bg bg-warm"></div>
+      <div class="panel-body" style="max-width:640px">
+        <div class="t-label mb-sm">Private Space</div>
+        <div class="t-h1" style="color:var(--gold-lt);margin-bottom:8px">My Journal</div>
+        <div style="font-size:14px;color:var(--text-soft);margin-bottom:28px">A private space to reflect, release and realign.</div>
+        <button class="btn-gold" style="margin-bottom:28px">New Entry &nbsp;+</button>
+        <div class="journal-entry">
+          <div>
+            <div class="journal-entry-name">Today's Reflection</div>
+            <div class="t-sm t-soft" style="margin-top:3px">Day 7 · Awareness</div>
+          </div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="journal-entry">
+          <div class="journal-entry-name">Gratitude</div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="journal-entry">
+          <div class="journal-entry-name">What I Noticed</div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="journal-entry">
+          <div class="journal-entry-name">What I'm Releasing</div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="journal-entry">
+          <div class="journal-entry-name">My Next Step</div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL: WISDOM CARDS ─────────────────── -->
+    <div class="panel bg-forest" id="p-wisdom">
+      <div class="panel-bg bg-forest"></div>
+      <div class="panel-body">
+        <div class="t-label mb-sm">Daily Inspiration</div>
+        <div class="t-h1" style="color:var(--gold-lt);margin-bottom:8px">Wisdom Cards</div>
+        <div style="font-size:14px;color:var(--text-soft);margin-bottom:24px">Daily inspiration from timeless wisdom.</div>
+        <div class="wisdom-grid">
+          <div class="wisdom-card">
+            <div class="wisdom-photo wp-bible"><div class="wisdom-icon">✦</div></div>
+            <div class="wisdom-info"><h4>Bible</h4><p>Guidance &amp; Strength</p></div>
+          </div>
+          <div class="wisdom-card">
+            <div class="wisdom-photo wp-stoic"><div class="wisdom-icon">◎</div></div>
+            <div class="wisdom-info"><h4>Stoic</h4><p>Perspective &amp; Clarity</p></div>
+          </div>
+          <div class="wisdom-card">
+            <div class="wisdom-photo wp-islam"><div class="wisdom-icon">◇</div></div>
+            <div class="wisdom-info"><h4>Islamic</h4><p>Surrender &amp; Trust</p></div>
+          </div>
+        </div>
+        <div style="margin-top:20px"><button class="btn-outline">More Traditions →</button></div>
+      </div>
+    </div>
+
+    <!-- PANEL: PROGRESS ─────────────────────── -->
+    <div class="panel bg-forest" id="p-progress">
+      <div class="panel-bg bg-forest"></div>
+      <div class="panel-body">
+        <div class="t-label mb-sm">Your Growth</div>
+        <div class="t-h1" style="color:var(--gold-lt);margin-bottom:8px">My Progress</div>
+        <div style="font-size:14px;color:var(--text-soft);margin-bottom:28px">A clear view of your growth across the 28-day journey.</div>
+        <div style="display:grid;grid-template-columns:180px 1fr;gap:40px;align-items:center">
+          <div style="text-align:center">
+            <svg width="160" height="160" viewBox="0 0 160 160">
+              <circle cx="80" cy="80" r="66" fill="none" stroke="rgba(200,169,110,0.15)" stroke-width="10"/>
+              <circle cx="80" cy="80" r="66" fill="none" stroke="#C8A96E" stroke-width="10" stroke-linecap="round" stroke-dasharray="414.7" stroke-dashoffset="157.6" transform="rotate(-90 80 80)"/>
+            </svg>
+            <div style="margin-top:-80px;position:relative">
+              <div style="font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:600;color:var(--gold)">62%</div>
+              <div style="font-size:11px;color:var(--text-soft);text-transform:uppercase;letter-spacing:0.1em">Journey Complete</div>
+            </div>
+            <div style="margin-top:60px"></div>
+          </div>
+          <div>
+            <div class="progress-bar-row">
+              <span class="progress-bar-label">Clarity</span>
+              <div class="progress-bar-track"><div class="progress-bar-fill" style="width:78%"></div></div>
+            </div>
+            <div class="progress-bar-row">
+              <span class="progress-bar-label">Energy</span>
+              <div class="progress-bar-track"><div class="progress-bar-fill" style="width:62%"></div></div>
+            </div>
+            <div class="progress-bar-row">
+              <span class="progress-bar-label">Focus</span>
+              <div class="progress-bar-track"><div class="progress-bar-fill" style="width:70%"></div></div>
+            </div>
+            <div class="progress-bar-row">
+              <span class="progress-bar-label">Emotional Balance</span>
+              <div class="progress-bar-track"><div class="progress-bar-fill" style="width:55%"></div></div>
+            </div>
+            <div class="progress-bar-row">
+              <span class="progress-bar-label">Resilience</span>
+              <div class="progress-bar-track"><div class="progress-bar-fill" style="width:68%"></div></div>
+            </div>
+            <div class="progress-bar-row">
+              <span class="progress-bar-label">Wellbeing</span>
+              <div class="progress-bar-track"><div class="progress-bar-fill" style="width:72%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL: LIFE VISION ─────────────────── -->
+    <div class="panel bg-forest" id="p-vision">
+      <div class="panel-bg bg-forest"></div>
+      <div class="panel-body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center">
+        <div class="t-label mb-sm">Your Blueprint</div>
+        <div class="t-display" style="margin-bottom:16px">Life Vision</div>
+        <div style="font-size:15px;color:var(--text-soft);margin-bottom:36px;line-height:1.75;max-width:400px">Revisit, refine and bring<br/>your vision to life.</div>
+        <button class="btn-gold">My Vision →</button>
+      </div>
+    </div>
+
+    <!-- PANEL: PRIVATE SESSIONS ─────────────── -->
+    <div class="panel bg-warm" id="p-sessions">
+      <div class="panel-bg bg-warm"></div>
+      <div class="panel-body" style="max-width:520px">
+        <div class="t-label mb-sm">1:1 Advisory</div>
+        <div class="t-h1" style="color:var(--gold-lt);margin-bottom:8px">Private Sessions</div>
+        <div style="font-size:14px;color:var(--text-soft);margin-bottom:28px">Your 1:1 advisory sessions and key milestones.</div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <button class="btn-gold" style="justify-content:flex-start;padding-left:28px">Book a Session</button>
+          <button class="btn-outline" style="justify-content:flex-start;padding-left:28px">My Schedule</button>
+          <button class="btn-outline" style="justify-content:flex-start;padding-left:28px">Session Notes</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+</div><!-- /s-app -->
+
+<!-- ══════════════════════════════════════════
+     SCREEN 13 — DAY COMPLETE
+══════════════════════════════════════════ -->
+<div class="screen bg-moon" id="s-complete">
+  <div style="text-align:center;max-width:480px;padding:0 24px">
+    <svg width="40" height="40" viewBox="0 0 64 64" fill="none" style="margin-bottom:24px">
+      <path d="M32 8 C18 20 12 36 20 50 C24 44 28 36 30 28 C34 36 36 44 44 50 C52 36 46 20 32 8Z" fill="none" stroke="#C8A96E" stroke-width="1.5"/>
+      <line x1="32" y1="10" x2="32" y2="52" stroke="#C8A96E" stroke-width="1" opacity="0.6"/>
+    </svg>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;color:var(--gold-lt);line-height:1.6;margin-bottom:12px">The day is complete.<br/>Return to yourself.</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:var(--text-soft);letter-spacing:0.08em;margin-bottom:40px">Rest. Integrate. Rise.</div>
+    <button class="btn-outline" onclick="goApp('p-dashboard')">Return Home</button>
+  </div>
+</div>
+
+<script>
+// ── Navigation ────────────────────────────
+let curScreen = 's-splash';
+let curPanel = 'p-dashboard';
+
+function goTo(id) {
+  if (id === curScreen) return;
+  document.getElementById(curScreen).classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  curScreen = id;
+}
+
+function goApp(panelId) {
+  // Show the app shell
+  if (curScreen !== 's-app') {
+    document.getElementById(curScreen).classList.remove('active');
+    document.getElementById('s-app').classList.add('active');
+    curScreen = 's-app';
+  }
+  // Switch panel
+  document.getElementById(curPanel).classList.remove('active');
+  document.getElementById(panelId).classList.add('active');
+  curPanel = panelId;
+  // Update nav active state
+  const navMap = {
+    'p-dashboard': 'nav-dashboard',
+    'p-today': 'nav-journey',
+    'p-meditations': 'nav-meditations',
+    'p-journal': 'nav-journal',
+    'p-wisdom': 'nav-wisdom',
+    'p-progress': 'nav-progress',
+    'p-vision': 'nav-vision',
+    'p-sessions': 'nav-sessions',
+  };
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  if (navMap[panelId]) document.getElementById(navMap[panelId]).classList.add('active');
+  // Scroll to top
+  document.querySelector('.main-content').scrollTop = 0;
+}
+
+// ── Experience picker ──────────────────────
+function pickExp(val, el) {
+  document.querySelectorAll('.exp-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+// ── Filter tabs ────────────────────────────
+document.querySelectorAll('.filter-tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
