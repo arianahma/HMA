@@ -23,10 +23,33 @@
   --sidebar-w:220px;
   --red-wf:rgba(200,169,110,0.08);
 }
-html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);background:var(--bg);overflow:hidden}
+html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);overflow:hidden}
+
+/* ─── NATURE BACKGROUNDS ─────────────────── */
+.bg-forest{background:
+  radial-gradient(ellipse at 25% 65%,rgba(40,80,15,0.72) 0%,transparent 55%),
+  radial-gradient(ellipse at 75% 30%,rgba(90,60,10,0.48) 0%,transparent 45%),
+  radial-gradient(ellipse at 50% 100%,rgba(20,40,8,0.9) 0%,transparent 50%),
+  linear-gradient(168deg,#0a1408 0%,#111f0a 30%,#0e1808 55%,#1a1005 80%,#0d0c05 100%)}
+.bg-warm{background:
+  radial-gradient(ellipse at 35% 70%,rgba(90,50,8,0.68) 0%,transparent 55%),
+  radial-gradient(ellipse at 65% 25%,rgba(35,60,10,0.55) 0%,transparent 50%),
+  linear-gradient(160deg,#0a0f04 0%,#171208 45%,#1a1005 100%)}
+.bg-moon{background:
+  radial-gradient(ellipse at 50% 14%,rgba(200,210,255,0.13) 0%,transparent 36%),
+  radial-gradient(ellipse at 50% 90%,rgba(5,10,25,0.95) 0%,transparent 55%),
+  linear-gradient(180deg,#04080f 0%,#080d1a 45%,#050810 100%)}
+.bg-ocean{background:
+  radial-gradient(ellipse at 50% 60%,rgba(10,50,80,0.75) 0%,transparent 55%),
+  radial-gradient(ellipse at 30% 20%,rgba(5,30,50,0.6) 0%,transparent 50%),
+  linear-gradient(170deg,#040c14 0%,#061218 50%,#040810 100%)}
+.bg-desert{background:
+  radial-gradient(ellipse at 50% 70%,rgba(100,60,10,0.70) 0%,transparent 55%),
+  radial-gradient(ellipse at 70% 30%,rgba(60,30,5,0.5) 0%,transparent 50%),
+  linear-gradient(170deg,#0f0a04 0%,#1a1005 50%,#140d04 100%)}
 
 /* ─── SCREENS ──────────────────────────── */
-.screen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);opacity:0;transition:opacity 0.3s}
+.screen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity 0.4s}
 .screen.active{display:flex;opacity:1}
 .screen.app-screen{flex-direction:row;align-items:stretch;justify-content:flex-start}
 
@@ -44,8 +67,12 @@ html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);backgroun
 .flow-sep{color:var(--border-hi);font-size:14px;padding:0 2px;flex-shrink:0}
 .flow-group{display:flex;align-items:center;border:1px solid var(--border);border-radius:6px;padding:0 4px;margin:0 4px;gap:0}
 
+/* ─── GLASS SURFACES ─────────────────────── */
+.card{background:rgba(10,16,8,0.74);border:1px solid rgba(200,169,110,0.22);border-radius:14px;padding:24px 28px;backdrop-filter:blur(2px)}
+.card-sm{background:rgba(10,16,8,0.74);border:1px solid rgba(200,169,110,0.22);border-radius:10px;padding:16px 20px;backdrop-filter:blur(2px)}
+
 /* ─── SIDEBAR ────────────────────────────── */
-.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:28px 0 20px;margin-top:36px}
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:rgba(5,10,5,0.88);border-right:1px solid rgba(200,169,110,0.15);display:flex;flex-direction:column;padding:28px 0 20px;margin-top:36px;backdrop-filter:blur(8px)}
 .sidebar-logo{display:flex;align-items:center;gap:10px;padding:0 20px 24px;border-bottom:1px solid var(--border);margin-bottom:4px}
 .logo-mark{width:26px;height:26px;border:1.5px solid var(--gold-line);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--gold)}
 .logo-text{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--gold);letter-spacing:0.08em}
@@ -226,6 +253,21 @@ html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);backgroun
 .priority-chip p{font-size:12px;color:var(--text-soft);margin-top:2px}
 .priority-score{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--gold);opacity:0.6;margin-left:16px}
 
+/* ─── THEME CARDS ────────────────────────── */
+.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.theme-card{border:2px solid rgba(200,169,110,0.18);border-radius:14px;overflow:hidden;cursor:pointer;transition:all 0.2s;position:relative}
+.theme-card:hover{border-color:rgba(200,169,110,0.4);transform:translateY(-2px)}
+.theme-card.sel{border-color:var(--gold-line);box-shadow:0 0 0 1px var(--gold-line)}
+.theme-preview{height:120px;position:relative;display:flex;align-items:flex-end;padding:12px}
+.theme-preview-label{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(245,237,216,0.5)}
+.theme-sel-dot{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;border:1.5px solid rgba(200,169,110,0.4);background:transparent;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.theme-card.sel .theme-sel-dot{background:var(--gold);border-color:var(--gold)}
+.theme-sel-dot::after{content:'✓';font-size:10px;color:rgba(10,8,4,0.9);opacity:0;transition:opacity 0.2s}
+.theme-card.sel .theme-sel-dot::after{opacity:1}
+.theme-info{padding:14px 16px;background:rgba(10,16,8,0.82)}
+.theme-info h4{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--text)}
+.theme-info p{font-size:12px;color:var(--text-soft);margin-top:3px}
+
 /* ─── SESSIONS ───────────────────────────── */
 .session-btn{width:100%;max-width:420px;padding:16px 24px;border-radius:50px;font-family:'Cormorant Garamond',serif;font-size:17px;cursor:pointer;text-align:left;margin-bottom:12px;transition:all 0.15s}
 </style>
@@ -280,7 +322,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);backgroun
 <!-- ══════════════════════════════════════════
      S1 · SPLASH
 ══════════════════════════════════════════ -->
-<div class="screen active" id="s-splash" style="background:var(--bg)">
+<div class="screen bg-forest active" id="s-splash">
   <div style="text-align:center;max-width:460px;padding:0 24px">
     <div style="width:60px;height:60px;border:1.5px solid var(--gold-line);border-radius:50%;margin:0 auto 24px;display:flex;align-items:center;justify-content:center">
       <span style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--gold)">HMA</span>
@@ -297,7 +339,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);backgroun
 <!-- ══════════════════════════════════════════
      S2 · SIGN IN
 ══════════════════════════════════════════ -->
-<div class="screen" id="s-signin" style="background:var(--bg)">
+<div class="screen bg-warm" id="s-signin">
   <div style="width:100%;max-width:400px;padding:0 24px">
     <div style="text-align:center;margin-bottom:28px">
       <div style="width:36px;height:36px;border:1.5px solid var(--gold-line);border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:12px;color:var(--gold)">HMA</div>
@@ -326,7 +368,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);backgroun
 <!-- ══════════════════════════════════════════
      S3 · CHOOSE EXPERIENCE
 ══════════════════════════════════════════ -->
-<div class="screen" id="s-experience" style="background:var(--bg);padding:36px 48px;align-items:flex-start;padding-top:72px;overflow-y:auto">
+<div class="screen bg-forest" id="s-experience" style="padding:36px 48px;align-items:flex-start;padding-top:72px;overflow-y:auto">
   <div style="max-width:900px;width:100%;margin:0 auto">
     <div class="t-label mb1">Step 1 of 4 — Personalise</div>
     <div class="t-h1 mt1">Choose Your Experience</div>
@@ -367,7 +409,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);backgroun
 <!-- ══════════════════════════════════════════
      S4 · SET ATMOSPHERE
 ══════════════════════════════════════════ -->
-<div class="screen" id="s-atmosphere" style="background:var(--bg);padding:48px;overflow-y:auto;align-items:flex-start;padding-top:72px">
+<div class="screen bg-forest" id="s-atmosphere" style="padding:48px;overflow-y:auto;align-items:flex-start;padding-top:72px">
   <div style="max-width:720px;width:100%;margin:0 auto">
     <div class="t-label mb1">Step 2 of 4 — Environment</div>
     <div class="t-h1 mt1">Set Your Atmosphere</div>
@@ -435,7 +477,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);backgroun
 <!-- ══════════════════════════════════════════
      S5 · JOURNEY SELECT
 ══════════════════════════════════════════ -->
-<div class="screen" id="s-journey-select" style="background:var(--bg);padding:48px;overflow-y:auto;align-items:flex-start;padding-top:72px">
+<div class="screen bg-forest" id="s-journey-select" style="padding:48px;overflow-y:auto;align-items:flex-start;padding-top:72px">
   <div style="max-width:620px;width:100%;margin:0 auto">
     <div class="t-label mb1">Step 3 of 4 — Your Path</div>
     <div class="t-h1 mt1">Choose your journey.</div>
@@ -471,7 +513,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);backgroun
 <!-- ══════════════════════════════════════════
      S6 · INNER ASSESSMENT
 ══════════════════════════════════════════ -->
-<div class="screen" id="s-inner-assess" style="background:var(--bg);padding:48px;overflow-y:auto;align-items:flex-start;padding-top:72px">
+<div class="screen bg-forest" id="s-inner-assess" style="padding:48px;overflow-y:auto;align-items:flex-start;padding-top:72px">
   <div style="max-width:680px;width:100%;margin:0 auto">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
       <button class="btn-ghost" id="ia-back">← Back</button>
@@ -489,7 +531,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);backgroun
 <!-- ══════════════════════════════════════════
      S7 · OUTER ASSESSMENT
 ══════════════════════════════════════════ -->
-<div class="screen" id="s-outer-assess" style="background:var(--bg);padding:48px;overflow-y:auto;align-items:flex-start;padding-top:72px">
+<div class="screen bg-forest" id="s-outer-assess" style="padding:48px;overflow-y:auto;align-items:flex-start;padding-top:72px">
   <div style="max-width:680px;width:100%;margin:0 auto">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
       <button class="btn-ghost" id="oa-back">← Back</button>
@@ -507,7 +549,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);backgroun
 <!-- ══════════════════════════════════════════
      S8 · PRIORITIES
 ══════════════════════════════════════════ -->
-<div class="screen" id="s-priorities" style="background:var(--bg);padding:48px;overflow-y:auto;align-items:flex-start;padding-top:72px">
+<div class="screen bg-forest" id="s-priorities" style="padding:48px;overflow-y:auto;align-items:flex-start;padding-top:72px">
   <div style="max-width:640px;width:100%;margin:0 auto">
     <div class="t-label mb1">Step 4 of 4 — Your Focus</div>
     <div class="t-h1 mt1">Choose your priority pillar.</div>
@@ -523,7 +565,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);backgroun
 <!-- ══════════════════════════════════════════
      APP SHELL (S9–S16)
 ══════════════════════════════════════════ -->
-<div class="screen app-screen" id="s-app" style="background:var(--bg)">
+<div class="screen app-screen bg-forest" id="s-app">
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
@@ -555,6 +597,10 @@ html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);backgroun
       </div>
       <div class="nav-item" id="nav-sessions" onclick="goApp('p-sessions')">
         <div class="nav-icon"></div>My Sessions
+      </div>
+      <div class="divider" style="margin:12px 20px;height:1px;background:rgba(200,169,110,0.12)"></div>
+      <div class="nav-item" id="nav-themes" onclick="goApp('p-themes')">
+        <div class="nav-icon" style="border-radius:50%"></div>Theme
       </div>
     </nav>
     <div class="sidebar-foot">
@@ -813,13 +859,66 @@ html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);backgroun
       <button class="btn-outline session-btn">Session Notes</button>
     </div>
 
+    <!-- PANEL: THEMES -->
+    <div class="panel" id="p-themes">
+      <div class="t-label mb1">Your Environment</div>
+      <div class="t-h1 mt1">Theme</div>
+      <div class="t-sm t-soft mt1" style="margin-bottom:8px">Choose the visual atmosphere for your 28-day journey. You can change this at any time.</div>
+      <div class="divider"></div>
+
+      <div class="t-label mb1" style="margin-bottom:12px">Experience</div>
+      <div class="theme-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:32px">
+        <div class="theme-card sel" id="tc-immersive" onclick="pickTheme('immersive',this)">
+          <div class="theme-preview bg-forest"><span class="theme-preview-label">Nature photography</span><div class="theme-sel-dot"></div></div>
+          <div class="theme-info"><h4>Immersive</h4><p>Nature-rich, sensory, fully immersive</p></div>
+        </div>
+        <div class="theme-card" id="tc-neutral" onclick="pickTheme('neutral',this)">
+          <div class="theme-preview bg-warm"><span class="theme-preview-label">Warm minimal</span><div class="theme-sel-dot"></div></div>
+          <div class="theme-info"><h4>Neutral</h4><p>Clean, calm and focused</p></div>
+        </div>
+        <div class="theme-card" id="tc-masc" onclick="pickTheme('masculine',this)">
+          <div class="theme-preview bg-moon"><span class="theme-preview-label">Dark stone</span><div class="theme-sel-dot"></div></div>
+          <div class="theme-info"><h4>Masculine</h4><p>Strong, grounded, performance-led</p></div>
+        </div>
+      </div>
+
+      <div class="t-label mb1" style="margin-bottom:12px">Scene</div>
+      <div class="theme-grid" style="grid-template-columns:repeat(5,1fr)">
+        <div class="theme-card sel" id="ts-forest" onclick="pickScene('forest',this)">
+          <div class="theme-preview bg-forest" style="height:90px"><span class="theme-preview-label">Forest</span><div class="theme-sel-dot"></div></div>
+          <div class="theme-info" style="padding:10px 12px"><h4 style="font-size:14px">Forest</h4></div>
+        </div>
+        <div class="theme-card" id="ts-warm" onclick="pickScene('warm',this)">
+          <div class="theme-preview bg-warm" style="height:90px"><span class="theme-preview-label">Candlelight</span><div class="theme-sel-dot"></div></div>
+          <div class="theme-info" style="padding:10px 12px"><h4 style="font-size:14px">Candlelight</h4></div>
+        </div>
+        <div class="theme-card" id="ts-ocean" onclick="pickScene('ocean',this)">
+          <div class="theme-preview bg-ocean" style="height:90px"><span class="theme-preview-label">Ocean</span><div class="theme-sel-dot"></div></div>
+          <div class="theme-info" style="padding:10px 12px"><h4 style="font-size:14px">Ocean</h4></div>
+        </div>
+        <div class="theme-card" id="ts-desert" onclick="pickScene('desert',this)">
+          <div class="theme-preview bg-desert" style="height:90px"><span class="theme-preview-label">Desert</span><div class="theme-sel-dot"></div></div>
+          <div class="theme-info" style="padding:10px 12px"><h4 style="font-size:14px">Desert</h4></div>
+        </div>
+        <div class="theme-card" id="ts-moon" onclick="pickScene('moon',this)">
+          <div class="theme-preview bg-moon" style="height:90px"><span class="theme-preview-label">Night</span><div class="theme-sel-dot"></div></div>
+          <div class="theme-info" style="padding:10px 12px"><h4 style="font-size:14px">Night</h4></div>
+        </div>
+      </div>
+
+      <div style="margin-top:28px">
+        <button class="btn-gold" onclick="applyTheme()">Apply Theme</button>
+        <span class="t-xs t-soft" style="margin-left:16px" id="theme-applied-msg"></span>
+      </div>
+    </div>
+
   </div><!-- /main -->
 </div><!-- /s-app -->
 
 <!-- ══════════════════════════════════════════
      S17 · DAY COMPLETE
 ══════════════════════════════════════════ -->
-<div class="screen" id="s-complete" style="background:var(--bg)">
+<div class="screen bg-moon" id="s-complete">
   <div style="text-align:center;max-width:460px;padding:0 24px">
     <div style="width:52px;height:52px;border:1px solid var(--gold-line);border-radius:50%;margin:0 auto 28px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--gold)">HMA</div>
     <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;color:var(--text);line-height:1.6;margin-bottom:12px">The day is complete.<br/>Return to yourself.</div>
@@ -870,7 +969,7 @@ const PANEL_MAP = {
 const NAV_MAP = {
   'p-dashboard':'nav-dashboard','p-today':'nav-journey','p-meditations':'nav-meditations',
   'p-journal':'nav-journal','p-wisdom':'nav-wisdom','p-progress':'nav-progress',
-  'p-vision':'nav-vision','p-sessions':'nav-sessions',
+  'p-vision':'nav-vision','p-sessions':'nav-sessions','p-themes':'nav-themes',
 };
 
 function setFlowActive(id) {
@@ -982,6 +1081,30 @@ function renderPriorities() {
         '<div class="priority-score">' + scores[i] + '</div>' +
       '</div>';
     }).join('');
+}
+
+// ─── Theme picker ───────────────────────────
+let selectedScene = 'forest';
+function pickTheme(val, el) {
+  el.closest('.theme-grid').querySelectorAll('.theme-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function pickScene(val, el) {
+  selectedScene = val;
+  el.closest('.theme-grid').querySelectorAll('.theme-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function applyTheme() {
+  const bgMap = { forest:'bg-forest', warm:'bg-warm', ocean:'bg-ocean', desert:'bg-desert', moon:'bg-moon' };
+  const cls = bgMap[selectedScene] || 'bg-forest';
+  ['s-app','s-splash','s-experience','s-atmosphere','s-journey-select','s-inner-assess','s-outer-assess','s-priorities'].forEach(id => {
+    const el = document.getElementById(id);
+    Object.values(bgMap).forEach(c => el.classList.remove(c));
+    el.classList.add(cls);
+  });
+  const msg = document.getElementById('theme-applied-msg');
+  msg.textContent = '✓ Theme applied';
+  setTimeout(() => { msg.textContent = ''; }, 2000);
 }
 
 function priorityBack() {
