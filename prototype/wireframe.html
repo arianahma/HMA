@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HMA Web — Wireframe</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#111410;
+  --bg2:#181c14;
+  --surface:#1e221a;
+  --surface2:#242820;
+  --border:#2e3228;
+  --border-hi:#3d4436;
+  --gold:#C8A96E;
+  --gold-dim:rgba(200,169,110,0.22);
+  --gold-line:rgba(200,169,110,0.35);
+  --text:#d4cbb8;
+  --text-soft:#8a8578;
+  --text-muted:#55524c;
+  --sidebar-w:220px;
+  --red-wf:rgba(200,169,110,0.08);
+}
+html,body{height:100%;font-family:'Inter',sans-serif;color:var(--text);background:var(--bg);overflow:hidden}
+
+/* ─── SCREENS ──────────────────────────── */
+.screen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);opacity:0;transition:opacity 0.3s}
+.screen.active{display:flex;opacity:1}
+.screen.app-screen{flex-direction:row;align-items:stretch;justify-content:flex-start}
+
+/* ─── WF ANNOTATION ─────────────────────── */
+.wf-label{font-size:10px;font-family:'Inter',sans-serif;text-transform:uppercase;letter-spacing:0.14em;color:var(--text-muted);margin-bottom:6px}
+.wf-box{background:var(--surface);border:1px dashed var(--border-hi);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:12px}
+.wf-pill{display:inline-block;background:var(--surface2);border:1px dashed var(--border-hi);border-radius:50px;padding:3px 10px;font-size:11px;color:var(--text-muted)}
+
+/* ─── PROGRESS BAR TOP ───────────────────── */
+.flow-bar{position:fixed;top:0;left:0;right:0;height:36px;background:rgba(17,20,16,0.95);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:0;z-index:999;overflow-x:auto}
+.flow-step{display:flex;align-items:center;gap:0;flex-shrink:0}
+.flow-node{padding:4px 10px;font-size:11px;color:var(--text-muted);cursor:pointer;border-radius:4px;white-space:nowrap;transition:all 0.15s}
+.flow-node:hover{color:var(--text)}
+.flow-node.active{color:var(--gold);background:var(--gold-dim)}
+.flow-sep{color:var(--border-hi);font-size:14px;padding:0 2px;flex-shrink:0}
+.flow-group{display:flex;align-items:center;border:1px solid var(--border);border-radius:6px;padding:0 4px;margin:0 4px;gap:0}
+
+/* ─── SIDEBAR ────────────────────────────── */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:28px 0 20px;margin-top:36px}
+.sidebar-logo{display:flex;align-items:center;gap:10px;padding:0 20px 24px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.logo-mark{width:26px;height:26px;border:1.5px solid var(--gold-line);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--gold)}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--gold);letter-spacing:0.08em}
+.nav-items{flex:1;padding:12px 0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;font-size:13px;color:var(--text-soft);transition:all 0.15s;border-right:2px solid transparent}
+.nav-item:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+.nav-item.active{color:var(--gold);background:var(--gold-dim);border-right-color:var(--gold)}
+.nav-icon{width:15px;height:15px;border:1px solid currentColor;border-radius:3px;flex-shrink:0;opacity:0.6}
+.nav-item.active .nav-icon{opacity:1}
+.sidebar-foot{padding:0 20px;display:flex;align-items:center;gap:10px}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--surface2);border:1px solid var(--border-hi);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--gold);font-family:'Cormorant Garamond',serif}
+
+/* ─── MAIN ───────────────────────────────── */
+.main{flex:1;overflow-y:auto;overflow-x:hidden;margin-top:36px}
+.main::-webkit-scrollbar{width:0}
+
+/* ─── PANELS ─────────────────────────────── */
+.panel{display:none;min-height:100%;padding:36px 44px;flex-direction:column}
+.panel.active{display:flex}
+
+/* ─── TYPOGRAPHY ─────────────────────────── */
+.t-label{font-size:11px;text-transform:uppercase;letter-spacing:0.14em;color:var(--gold);font-family:'Inter',sans-serif}
+.t-h1{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:500;line-height:1.2;color:var(--text)}
+.t-h2{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500;color:var(--text)}
+.t-h3{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:var(--text)}
+.t-display{font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:500;line-height:1.1;color:var(--text)}
+.t-soft{color:var(--text-soft)}
+.t-sm{font-size:13px;line-height:1.65}
+.t-xs{font-size:11px}
+.mt1{margin-top:6px}.mt2{margin-top:12px}.mt3{margin-top:20px}.mt4{margin-top:28px}.mt5{margin-top:36px}.mt6{margin-top:48px}
+.mb1{margin-bottom:6px}.mb2{margin-bottom:12px}.mb3{margin-bottom:20px}
+
+/* ─── CARDS ──────────────────────────────── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px 28px}
+.card-sm{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px}
+.card-hi{background:var(--surface);border:1px solid var(--gold-line);border-radius:14px;padding:24px 28px}
+
+/* ─── BUTTONS ────────────────────────────── */
+.btn-gold{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--gold-dim);border:1px solid var(--gold-line);color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;letter-spacing:0.04em;border-radius:50px;padding:12px 32px;cursor:pointer;transition:all 0.2s}
+.btn-gold:hover{background:rgba(200,169,110,0.3)}
+.btn-outline{display:inline-flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--border-hi);color:var(--text-soft);font-family:'Cormorant Garamond',serif;font-size:15px;border-radius:50px;padding:11px 24px;cursor:pointer;transition:all 0.2s}
+.btn-outline:hover{border-color:var(--gold-line);color:var(--text)}
+.btn-ghost{background:none;border:none;color:var(--text-muted);font-size:12.5px;cursor:pointer;padding:4px 0;transition:color 0.15s}
+.btn-ghost:hover{color:var(--text-soft)}
+
+/* ─── FORM ───────────────────────────────── */
+.input-wrap{position:relative;margin-bottom:12px}
+.input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:14px;height:14px;border:1px solid var(--border-hi);border-radius:2px}
+.form-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:13px 14px 13px 40px;color:var(--text-soft);font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s}
+.form-input:focus{border-color:var(--gold-line);color:var(--text)}
+.form-input::placeholder{color:var(--text-muted)}
+
+/* ─── EXPERIENCE CARDS ───────────────────── */
+.exp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+.exp-card{border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:border-color 0.2s}
+.exp-card.sel{border-color:var(--gold-line)}
+.exp-thumb{height:180px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;position:relative}
+.exp-thumb-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em}
+.exp-info{padding:18px 20px;background:var(--surface)}
+.exp-info h3{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--text);margin-bottom:5px}
+.exp-info p{font-size:12.5px;color:var(--text-soft)}
+.exp-radio{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border-hi);margin-top:12px;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.exp-card.sel .exp-radio{border-color:var(--gold);background:var(--gold-dim)}
+.exp-radio-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);opacity:0}
+.exp-card.sel .exp-radio-dot{opacity:1}
+
+/* ─── SOUND TOGGLES ──────────────────────── */
+.sound-row{display:flex;align-items:center;gap:14px;padding:13px 16px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);margin-bottom:8px;cursor:pointer;transition:border-color 0.15s}
+.sound-row.on{border-color:var(--gold-line)}
+.sound-name{flex:1;font-size:13.5px}
+.toggle{width:44px;height:24px;border-radius:12px;background:var(--border-hi);position:relative;flex-shrink:0;transition:background 0.2s;cursor:pointer}
+.sound-row.on .toggle{background:var(--gold-dim);border:1px solid var(--gold-line)}
+.knob{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--border-hi);border:1px solid var(--border);transition:transform 0.2s}
+.sound-row.on .knob{transform:translateX(20px);background:var(--gold)}
+.vol-track{height:3px;background:var(--border);border-radius:2px;position:relative;cursor:pointer;margin-top:4px}
+.vol-fill{height:100%;width:65%;background:var(--gold-line);border-radius:2px}
+.vol-thumb{position:absolute;top:50%;transform:translate(-50%,-50%);left:65%;width:14px;height:14px;border-radius:50%;background:var(--gold);cursor:pointer}
+
+/* ─── ARCH BOXES ─────────────────────────── */
+.arch-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+.arch-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:18px 14px;text-align:center;cursor:pointer;transition:all 0.15s}
+.arch-box:hover,.arch-box.active{border-color:var(--gold-line);background:var(--gold-dim)}
+.arch-letter{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--gold);line-height:1}
+.arch-name{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--text);margin-top:5px}
+.arch-days{font-size:10.5px;color:var(--text-muted);margin-top:2px;text-transform:uppercase;letter-spacing:0.08em}
+
+/* ─── DAY RING ───────────────────────────── */
+.day-ring{width:94px;height:94px;position:relative;flex-shrink:0}
+.day-ring svg{transform:rotate(-90deg)}
+.day-ring-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.day-num{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--gold);line-height:1}
+.day-of{font-size:10px;color:var(--text-muted)}
+
+/* ─── CHECKLIST ──────────────────────────── */
+.check-item{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);margin-bottom:8px;cursor:pointer;transition:all 0.15s}
+.check-item.done{background:var(--gold-dim);border-color:var(--gold-line)}
+.check-circle{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border-hi);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s}
+.check-item.done .check-circle{background:var(--gold);border-color:var(--gold)}
+.check-name{flex:1;font-size:14px}
+.check-time{font-size:12px;color:var(--text-muted)}
+
+/* ─── VIDEO MOCK ─────────────────────────── */
+.video-mock{background:var(--surface2);border:1px dashed var(--border-hi);border-radius:10px;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.video-play{width:48px;height:48px;border-radius:50%;border:1.5px solid var(--gold-line);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.video-play svg{width:16px;height:16px;fill:var(--gold);margin-left:2px}
+.video-timestamp{position:absolute;bottom:10px;left:14px;font-size:11px;color:var(--text-muted)}
+.video-label{font-size:11px;color:var(--text-muted);margin-top:8px;text-transform:uppercase;letter-spacing:0.08em}
+
+/* ─── FILTER TABS ────────────────────────── */
+.filter-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.filter-tab{padding:6px 14px;border-radius:50px;border:1px solid var(--border);color:var(--text-muted);font-size:12px;cursor:pointer;transition:all 0.15s}
+.filter-tab.active,.filter-tab:hover{border-color:var(--gold-line);color:var(--gold);background:var(--gold-dim)}
+
+/* ─── MED CARDS ──────────────────────────── */
+.med-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px}
+.med-card{border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color 0.15s}
+.med-card:hover{border-color:var(--border-hi)}
+.med-thumb{height:120px;background:var(--surface2);display:flex;align-items:center;justify-content:center;border-bottom:1px dashed var(--border)}
+.med-thumb svg{width:24px;height:24px;fill:var(--text-muted)}
+.med-info{padding:12px 14px;background:var(--surface)}
+.med-info h4{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--text)}
+.med-info p{font-size:11.5px;color:var(--text-muted);margin-top:2px}
+
+/* ─── JOURNAL ROWS ───────────────────────── */
+.journal-row{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);margin-bottom:8px;cursor:pointer;transition:border-color 0.15s}
+.journal-row:hover{border-color:var(--gold-line)}
+.journal-row-name{font-family:'Cormorant Garamond',serif;font-size:17px}
+.chevron{width:14px;height:14px;border-top:1.5px solid var(--border-hi);border-right:1.5px solid var(--border-hi);transform:rotate(45deg);flex-shrink:0}
+
+/* ─── WISDOM GRID ────────────────────────── */
+.wisdom-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.wisdom-card{border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color 0.15s}
+.wisdom-card:hover{border-color:var(--gold-line)}
+.wisdom-photo{height:140px;background:var(--surface2);display:flex;align-items:center;justify-content:center;border-bottom:1px dashed var(--border)}
+.wisdom-symbol{font-size:28px;color:var(--text-muted)}
+.wisdom-info{padding:14px 16px;background:var(--surface)}
+.wisdom-info h4{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--text)}
+.wisdom-info p{font-size:11.5px;color:var(--text-muted);margin-top:3px}
+
+/* ─── PROGRESS ───────────────────────────── */
+.progress-row{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.progress-label{font-size:13px;width:140px;flex-shrink:0;color:var(--text-soft)}
+.progress-track{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--gold-line);border-radius:2px}
+
+/* ─── QUICK CARDS ────────────────────────── */
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+/* ─── DIVIDER ────────────────────────────── */
+.divider{height:1px;background:var(--border);margin:18px 0}
+
+/* ─── SECTION LABEL ──────────────────────── */
+.section-rule{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.section-rule::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ─── JOURNEY CARDS ──────────────────────── */
+.journey-card{display:flex;align-items:center;gap:16px;padding:18px 20px;border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:all 0.15s;background:var(--surface2);margin-bottom:10px}
+.journey-card:hover,.journey-card.sel{border-color:var(--gold-line);background:var(--gold-dim)}
+.journey-mark{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--border-hi);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text-muted)}
+.journey-card.sel .journey-mark{border-color:var(--gold-line);color:var(--gold)}
+
+/* ─── ASSESS ─────────────────────────────── */
+.assess-bar{height:2px;background:var(--border);border-radius:1px;overflow:hidden;margin:12px 0 20px}
+.assess-bar-fill{height:100%;background:var(--gold-line);border-radius:1px;transition:width 0.4s}
+.assess-step{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--gold);margin-bottom:10px}
+.assess-q{font-family:'Cormorant Garamond',serif;font-size:24px;line-height:1.5;color:var(--text);max-width:600px;margin-bottom:6px}
+.assess-desc{font-size:13px;color:var(--text-soft);margin-bottom:28px}
+.slider-wrap{margin-top:20px}
+.slider-labels{display:flex;justify-content:space-between;margin-bottom:8px}
+.wf-slider{-webkit-appearance:none;appearance:none;width:100%;height:3px;background:var(--border-hi);border-radius:2px;outline:none;cursor:pointer;max-width:600px}
+.wf-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gold);border:2px solid var(--bg);cursor:pointer}
+.slider-val{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:600;color:var(--gold);text-align:center;line-height:1;margin-top:12px;max-width:600px}
+
+/* ─── PRIORITIES ─────────────────────────── */
+.priority-chip{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);margin-bottom:8px;cursor:pointer;transition:all 0.15s;max-width:600px}
+.priority-chip:hover,.priority-chip.sel{border-color:var(--gold-line);background:var(--gold-dim)}
+.priority-chip h4{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--text)}
+.priority-chip p{font-size:12px;color:var(--text-soft);margin-top:2px}
+.priority-score{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--gold);opacity:0.6;margin-left:16px}
+
+/* ─── SESSIONS ───────────────────────────── */
+.session-btn{width:100%;max-width:420px;padding:16px 24px;border-radius:50px;font-family:'Cormorant Garamond',serif;font-size:17px;cursor:pointer;text-align:left;margin-bottom:12px;transition:all 0.15s}
+</style>
+</head>
+<body>
+
+<!-- ─── FLOW BAR ─────────────────────────── -->
+<div class="flow-bar">
+  <div class="flow-step">
+    <div class="flow-group">
+      <div class="flow-node active" id="fn-splash" onclick="goTo('s-splash')">Splash</div>
+      <div class="flow-sep">›</div>
+      <div class="flow-node" id="fn-signin" onclick="goTo('s-signin')">Sign In</div>
+      <div class="flow-sep">›</div>
+      <div class="flow-node" id="fn-exp" onclick="goTo('s-experience')">Experience</div>
+      <div class="flow-sep">›</div>
+      <div class="flow-node" id="fn-atm" onclick="goTo('s-atmosphere')">Atmosphere</div>
+      <div class="flow-sep">›</div>
+      <div class="flow-node" id="fn-journey" onclick="goTo('s-journey-select')">Journey</div>
+      <div class="flow-sep">›</div>
+      <div class="flow-node" id="fn-assess-i" onclick="goTo('s-inner-assess')">Inner Assess</div>
+      <div class="flow-sep">›</div>
+      <div class="flow-node" id="fn-assess-o" onclick="goTo('s-outer-assess')">Outer Assess</div>
+      <div class="flow-sep">›</div>
+      <div class="flow-node" id="fn-priority" onclick="goTo('s-priorities')">Priority</div>
+    </div>
+    <div style="width:8px"></div>
+    <div class="flow-group">
+      <div class="flow-node" id="fn-dash" onclick="goApp('p-dashboard')">Home</div>
+      <div class="flow-sep">·</div>
+      <div class="flow-node" id="fn-today" onclick="goApp('p-today')">Today</div>
+      <div class="flow-sep">·</div>
+      <div class="flow-node" id="fn-med" onclick="goApp('p-meditations')">Meditations</div>
+      <div class="flow-sep">·</div>
+      <div class="flow-node" id="fn-journal" onclick="goApp('p-journal')">Journal</div>
+      <div class="flow-sep">·</div>
+      <div class="flow-node" id="fn-wisdom" onclick="goApp('p-wisdom')">Wisdom</div>
+      <div class="flow-sep">·</div>
+      <div class="flow-node" id="fn-progress" onclick="goApp('p-progress')">Progress</div>
+      <div class="flow-sep">·</div>
+      <div class="flow-node" id="fn-vision" onclick="goApp('p-vision')">Vision</div>
+      <div class="flow-sep">·</div>
+      <div class="flow-node" id="fn-sessions" onclick="goApp('p-sessions')">Sessions</div>
+    </div>
+    <div style="width:8px"></div>
+    <div class="flow-group">
+      <div class="flow-node" id="fn-complete" onclick="goTo('s-complete')">Day Complete</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S1 · SPLASH
+══════════════════════════════════════════ -->
+<div class="screen active" id="s-splash" style="background:var(--bg)">
+  <div style="text-align:center;max-width:460px;padding:0 24px">
+    <div style="width:60px;height:60px;border:1.5px solid var(--gold-line);border-radius:50%;margin:0 auto 24px;display:flex;align-items:center;justify-content:center">
+      <span style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--gold)">HMA</span>
+    </div>
+    <div class="t-label mb1">The Human Mastery Architecture™</div>
+    <div class="t-display mt2" style="color:var(--text)">HMA</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:19px;font-style:italic;color:var(--text-soft);margin-top:10px">Your Human Mastery Architecture™</div>
+    <div class="t-sm t-soft mt2" style="line-height:1.9">A 28-Day Private Online Journey<br/>to Clarity · Capacity · Mastery · Legacy</div>
+    <button class="btn-gold mt3" style="margin-top:36px" onclick="goTo('s-signin')">Begin Your Journey →</button>
+    <div class="mt2 t-xs t-soft" style="margin-top:16px">[ Background: forest at golden hour · full bleed ]</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S2 · SIGN IN
+══════════════════════════════════════════ -->
+<div class="screen" id="s-signin" style="background:var(--bg)">
+  <div style="width:100%;max-width:400px;padding:0 24px">
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="width:36px;height:36px;border:1.5px solid var(--gold-line);border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:12px;color:var(--gold)">HMA</div>
+      <div class="t-h2">Welcome, Architect</div>
+    </div>
+    <div class="card">
+      <div class="input-wrap">
+        <div class="input-icon"></div>
+        <input class="form-input" type="email" placeholder="Email">
+      </div>
+      <div class="input-wrap">
+        <div class="input-icon"></div>
+        <input class="form-input" type="password" placeholder="Password">
+      </div>
+      <div style="height:12px"></div>
+      <button class="btn-gold" style="width:100%" onclick="goTo('s-experience')">Log In</button>
+      <div style="text-align:center;margin-top:14px;display:flex;justify-content:center;gap:20px">
+        <button class="btn-ghost">Forgot password?</button>
+        <button class="btn-ghost">Create Account</button>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:12px"><button class="btn-ghost" onclick="goTo('s-splash')">← Back</button></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S3 · CHOOSE EXPERIENCE
+══════════════════════════════════════════ -->
+<div class="screen" id="s-experience" style="background:var(--bg);padding:36px 48px;align-items:flex-start;padding-top:72px;overflow-y:auto">
+  <div style="max-width:900px;width:100%;margin:0 auto">
+    <div class="t-label mb1">Step 1 of 4 — Personalise</div>
+    <div class="t-h1 mt1">Choose Your Experience</div>
+    <div class="t-sm t-soft mt1">A personalised environment for your 28-day journey</div>
+    <div class="exp-grid">
+      <div class="exp-card sel" id="ec-immersive" onclick="pickExp('immersive',this)">
+        <div class="exp-thumb"><span class="exp-thumb-label">Nature photography</span></div>
+        <div class="exp-info">
+          <h3>Immersive</h3>
+          <p>Nature-rich, sensory and fully immersive</p>
+          <div class="exp-radio"><div class="exp-radio-dot"></div></div>
+        </div>
+      </div>
+      <div class="exp-card" id="ec-neutral" onclick="pickExp('neutral',this)">
+        <div class="exp-thumb"><span class="exp-thumb-label">Minimal gradient</span></div>
+        <div class="exp-info">
+          <h3>Neutral</h3>
+          <p>Clean, calm and focused</p>
+          <div class="exp-radio"><div class="exp-radio-dot"></div></div>
+        </div>
+      </div>
+      <div class="exp-card" id="ec-masc" onclick="pickExp('masculine',this)">
+        <div class="exp-thumb"><span class="exp-thumb-label">Dark stone / architecture</span></div>
+        <div class="exp-info">
+          <h3>Masculine</h3>
+          <p>Strong, grounded and performance-led</p>
+          <div class="exp-radio"><div class="exp-radio-dot"></div></div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px">
+      <button class="btn-gold" onclick="goTo('s-atmosphere')">Continue →</button>
+      <div style="margin-top:12px"><button class="btn-ghost" onclick="goTo('s-signin')">← Back</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S4 · SET ATMOSPHERE
+══════════════════════════════════════════ -->
+<div class="screen" id="s-atmosphere" style="background:var(--bg);padding:48px;overflow-y:auto;align-items:flex-start;padding-top:72px">
+  <div style="max-width:720px;width:100%;margin:0 auto">
+    <div class="t-label mb1">Step 2 of 4 — Environment</div>
+    <div class="t-h1 mt1">Set Your Atmosphere</div>
+    <div class="t-sm t-soft mt1 mb3">Choose your ambient soundscape and focus state</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+      <div>
+        <div class="t-label mb2" style="margin-bottom:12px">Nature Sounds</div>
+        <div class="sound-row on" onclick="this.classList.toggle('on')">
+          <span style="font-size:14px">🌿</span>
+          <span class="sound-name">Forest &amp; Birds</span>
+          <div class="toggle"><div class="knob"></div></div>
+        </div>
+        <div class="sound-row" onclick="this.classList.toggle('on')">
+          <span style="font-size:14px">💧</span>
+          <span class="sound-name">Waterfall &amp; River</span>
+          <div class="toggle"><div class="knob"></div></div>
+        </div>
+        <div class="sound-row" onclick="this.classList.toggle('on')">
+          <span style="font-size:14px">🌊</span>
+          <span class="sound-name">Ocean &amp; Waves</span>
+          <div class="toggle"><div class="knob"></div></div>
+        </div>
+        <div class="sound-row" onclick="this.classList.toggle('on')">
+          <span style="font-size:14px">🔥</span>
+          <span class="sound-name">Fire &amp; Hearth</span>
+          <div class="toggle"><div class="knob"></div></div>
+        </div>
+        <div class="sound-row" onclick="this.classList.toggle('on')">
+          <span style="font-size:14px">🌙</span>
+          <span class="sound-name">Night &amp; Stars</span>
+          <div class="toggle"><div class="knob"></div></div>
+        </div>
+        <div class="card-sm mt3" style="margin-top:16px">
+          <div class="t-label mb1" style="margin-bottom:8px">Volume</div>
+          <div class="vol-track"><div class="vol-fill"></div><div class="vol-thumb"></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="t-label mb2" style="margin-bottom:12px">Binaural Focus</div>
+        <div class="sound-row on" onclick="this.classList.toggle('on')">
+          <span class="sound-name">Deep Focus 40 Hz</span>
+          <div class="toggle"><div class="knob"></div></div>
+        </div>
+        <div class="sound-row" onclick="this.classList.toggle('on')">
+          <span class="sound-name">Creativity 12 Hz</span>
+          <div class="toggle"><div class="knob"></div></div>
+        </div>
+        <div class="sound-row" onclick="this.classList.toggle('on')">
+          <span class="sound-name">Calm &amp; Balance 8 Hz</span>
+          <div class="toggle"><div class="knob"></div></div>
+        </div>
+        <div class="sound-row" onclick="this.classList.toggle('on')">
+          <span class="sound-name">Sleep &amp; Recovery 4 Hz</span>
+          <div class="toggle"><div class="knob"></div></div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:32px">
+      <button class="btn-gold" onclick="goTo('s-journey-select')">Continue →</button>
+      <div style="margin-top:12px"><button class="btn-ghost" onclick="goTo('s-experience')">← Back</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S5 · JOURNEY SELECT
+══════════════════════════════════════════ -->
+<div class="screen" id="s-journey-select" style="background:var(--bg);padding:48px;overflow-y:auto;align-items:flex-start;padding-top:72px">
+  <div style="max-width:620px;width:100%;margin:0 auto">
+    <div class="t-label mb1">Step 3 of 4 — Your Path</div>
+    <div class="t-h1 mt1">Choose your journey.</div>
+    <div class="t-sm t-soft mt1 mb3" style="margin-bottom:24px">The HMA 28-day programme follows two distinct paths. Begin with the one calling you most — or take both together.</div>
+    <div class="journey-card sel" id="jc-inner" onclick="pickJourney('inner',this)">
+      <div class="journey-mark">◎</div>
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:500;color:var(--text)">Inner Architecture™</div>
+        <div class="t-sm t-soft mt1">Master yourself — mind, faith, emotions, body, identity, presence</div>
+      </div>
+    </div>
+    <div class="journey-card" id="jc-outer" onclick="pickJourney('outer',this)">
+      <div class="journey-mark">◇</div>
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:500;color:var(--text)">Outer Architecture™</div>
+        <div class="t-sm t-soft mt1">Architect your life — relationships, career, wealth, lifestyle, joy, legacy</div>
+      </div>
+    </div>
+    <div class="journey-card" id="jc-both" onclick="pickJourney('both',this)">
+      <div class="journey-mark">◈</div>
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:500;color:var(--text)">The Complete Journey</div>
+        <div class="t-sm t-soft mt1">Begin with both — the full dual-architecture experience</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:28px">
+      <button class="btn-gold" onclick="startAssessment()">Begin Assessment →</button>
+      <div style="margin-top:12px"><button class="btn-ghost" onclick="goTo('s-atmosphere')">← Back</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S6 · INNER ASSESSMENT
+══════════════════════════════════════════ -->
+<div class="screen" id="s-inner-assess" style="background:var(--bg);padding:48px;overflow-y:auto;align-items:flex-start;padding-top:72px">
+  <div style="max-width:680px;width:100%;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <button class="btn-ghost" id="ia-back">← Back</button>
+      <div class="t-xs t-soft" style="text-transform:uppercase;letter-spacing:0.1em">Inner Architecture™</div>
+    </div>
+    <div class="assess-bar"><div class="assess-bar-fill" id="ia-fill" style="width:16.6%"></div></div>
+    <div id="ia-content"><!-- rendered by JS --></div>
+    <div style="margin-top:28px;display:flex;align-items:center;justify-content:space-between;max-width:600px">
+      <button class="btn-ghost" id="ia-skip">Skip this question</button>
+      <button class="btn-gold" id="ia-next" onclick="assessNext('inner')">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S7 · OUTER ASSESSMENT
+══════════════════════════════════════════ -->
+<div class="screen" id="s-outer-assess" style="background:var(--bg);padding:48px;overflow-y:auto;align-items:flex-start;padding-top:72px">
+  <div style="max-width:680px;width:100%;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <button class="btn-ghost" id="oa-back">← Back</button>
+      <div class="t-xs t-soft" style="text-transform:uppercase;letter-spacing:0.1em">Outer Architecture™</div>
+    </div>
+    <div class="assess-bar"><div class="assess-bar-fill" id="oa-fill" style="width:16.6%"></div></div>
+    <div id="oa-content"><!-- rendered by JS --></div>
+    <div style="margin-top:28px;display:flex;align-items:center;justify-content:space-between;max-width:600px">
+      <button class="btn-ghost" id="oa-skip">Skip this question</button>
+      <button class="btn-gold" id="oa-next" onclick="assessNext('outer')">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     S8 · PRIORITIES
+══════════════════════════════════════════ -->
+<div class="screen" id="s-priorities" style="background:var(--bg);padding:48px;overflow-y:auto;align-items:flex-start;padding-top:72px">
+  <div style="max-width:640px;width:100%;margin:0 auto">
+    <div class="t-label mb1">Step 4 of 4 — Your Focus</div>
+    <div class="t-h1 mt1">Choose your priority pillar.</div>
+    <div class="t-sm t-soft mt1" style="margin-bottom:24px">Not necessarily your lowest score — the pillar you most want to transform in the next 28 days.</div>
+    <div id="priority-list"><!-- rendered by JS --></div>
+    <div style="margin-top:28px">
+      <button class="btn-gold" onclick="goApp('p-dashboard')">Begin my 28 days →</button>
+      <div style="margin-top:12px"><button class="btn-ghost" onclick="priorityBack()">← Back</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     APP SHELL (S9–S16)
+══════════════════════════════════════════ -->
+<div class="screen app-screen" id="s-app" style="background:var(--bg)">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">◎</div>
+      <span class="logo-text">HMA</span>
+    </div>
+    <nav class="nav-items">
+      <div class="nav-item active" id="nav-dashboard" onclick="goApp('p-dashboard')">
+        <div class="nav-icon" style="border-radius:3px"></div>Home
+      </div>
+      <div class="nav-item" id="nav-journey" onclick="goApp('p-today')">
+        <div class="nav-icon" style="border-radius:50%"></div>My Journey
+      </div>
+      <div class="nav-item" id="nav-meditations" onclick="goApp('p-meditations')">
+        <div class="nav-icon"></div>Meditations
+      </div>
+      <div class="nav-item" id="nav-journal" onclick="goApp('p-journal')">
+        <div class="nav-icon"></div>Journal
+      </div>
+      <div class="nav-item" id="nav-wisdom" onclick="goApp('p-wisdom')">
+        <div class="nav-icon" style="border-radius:50%"></div>Wisdom Cards
+      </div>
+      <div class="nav-item" id="nav-progress" onclick="goApp('p-progress')">
+        <div class="nav-icon"></div>Progress
+      </div>
+      <div class="nav-item" id="nav-vision" onclick="goApp('p-vision')">
+        <div class="nav-icon" style="border-radius:50%"></div>Resources
+      </div>
+      <div class="nav-item" id="nav-sessions" onclick="goApp('p-sessions')">
+        <div class="nav-icon"></div>My Sessions
+      </div>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="avatar">A</div>
+      <span class="t-xs t-soft">Ariana</span>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT AREA -->
+  <div class="main">
+
+    <!-- PANEL: HOME / DASHBOARD -->
+    <div class="panel active" id="p-dashboard">
+      <!-- Header row -->
+      <div style="display:flex;align-items:flex-start;gap:20px;margin-bottom:28px">
+        <div style="flex:1">
+          <div class="t-label mb1">Wednesday · 20 November 2026</div>
+          <div class="t-h1 mt1" style="font-size:38px">Good Morning, Architect</div>
+          <div class="t-sm t-soft mt1">A new day to build a calmer, clearer and more aligned version of you.</div>
+        </div>
+        <!-- Day ring -->
+        <div class="day-ring">
+          <svg width="94" height="94" viewBox="0 0 94 94">
+            <circle cx="47" cy="47" r="40" fill="none" stroke="var(--border)" stroke-width="6"/>
+            <circle cx="47" cy="47" r="40" fill="none" stroke="var(--gold-line)" stroke-width="6" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="171.7"/>
+          </svg>
+          <div class="day-ring-inner">
+            <div class="day-num">7</div>
+            <div class="day-of">/ 28</div>
+            <div style="font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:0.08em;margin-top:1px">Day</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARCH card -->
+      <div class="card mb3" style="margin-bottom:20px">
+        <div class="t-label">ARCH™ Journey</div>
+        <div class="arch-row">
+          <div class="arch-box active">
+            <div class="arch-letter">A</div>
+            <div class="arch-name">Awareness</div>
+            <div class="arch-days">Days 1–7</div>
+          </div>
+          <div class="arch-box">
+            <div class="arch-letter">R</div>
+            <div class="arch-name">Realign</div>
+            <div class="arch-days">Days 8–14</div>
+          </div>
+          <div class="arch-box">
+            <div class="arch-letter">C</div>
+            <div class="arch-name">Capacity</div>
+            <div class="arch-days">Days 15–21</div>
+          </div>
+          <div class="arch-box">
+            <div class="arch-letter">H</div>
+            <div class="arch-name">Habits</div>
+            <div class="arch-days">Days 22–28</div>
+          </div>
+        </div>
+        <div style="margin-top:24px">
+          <button class="btn-gold" onclick="goApp('p-today')">Continue Today's Experience →</button>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div class="quick-grid">
+        <div class="card-sm" style="cursor:pointer" onclick="goApp('p-journal')">
+          <div class="t-label mb1">My Journal</div>
+          <div class="t-h3 t-soft mt1" style="font-size:15px">Today's reflection awaits</div>
+        </div>
+        <div class="card-sm" style="cursor:pointer" onclick="goApp('p-wisdom')">
+          <div class="t-label mb1">Wisdom Cards</div>
+          <div class="t-h3 t-soft mt1" style="font-size:15px">Daily inspiration</div>
+        </div>
+        <div class="card-sm" style="cursor:pointer" onclick="goApp('p-sessions')">
+          <div class="t-label mb1">Private Sessions</div>
+          <div class="t-h3 t-soft mt1" style="font-size:15px">Next session: Thursday</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL: TODAY'S EXPERIENCE -->
+    <div class="panel" id="p-today">
+      <div class="t-label mb1">Day 7 of 28</div>
+      <div class="t-h1 mt1">Today's Experience – Day 7</div>
+      <div class="t-xs t-soft mt1" style="text-transform:uppercase;letter-spacing:0.1em;margin-bottom:24px">Awareness — See Yourself Clearly</div>
+      <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:28px">
+        <!-- Checklist -->
+        <div>
+          <div class="check-item done" onclick="this.classList.toggle('done')">
+            <div class="check-circle"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--bg)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="check-name">Arrival &amp; Breath</span>
+            <span class="check-time">5 min</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('done')">
+            <div class="check-circle"></div>
+            <span class="check-name">Daily Insight</span>
+            <span class="check-time">10 min</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('done')">
+            <div class="check-circle"></div>
+            <span class="check-name">Reflection</span>
+            <span class="check-time">10 min</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('done')">
+            <div class="check-circle"></div>
+            <span class="check-name">Today's Action</span>
+            <span class="check-time">5 min</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('done')">
+            <div class="check-circle"></div>
+            <span class="check-name">Integration</span>
+            <span class="check-time">5 min</span>
+          </div>
+        </div>
+        <!-- Video + side panel -->
+        <div>
+          <div class="video-mock" style="margin-bottom:16px">
+            <div class="video-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+            <div class="video-label">Video · 10:24</div>
+            <div class="video-timestamp">[ Video player · 16:9 ]</div>
+          </div>
+          <div class="card-sm">
+            <div class="t-label mb1">Today's Focus</div>
+            <div class="t-sm t-soft mt1" style="line-height:1.75">What part of me is ready to be seen, healed or released?</div>
+            <div class="divider"></div>
+            <div class="t-label mb1">Action for Today</div>
+            <div class="t-sm t-soft mt1" style="line-height:1.75">Take one conscious action that brings me closer to who I truly am.</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:28px;display:flex;gap:12px">
+        <button class="btn-gold" onclick="goTo('s-complete')">Mark Day Complete →</button>
+      </div>
+    </div>
+
+    <!-- PANEL: MEDITATIONS -->
+    <div class="panel" id="p-meditations">
+      <div class="t-label mb1">Your Library</div>
+      <div class="t-h1 mt1">Meditation Library</div>
+      <div class="divider"></div>
+      <div class="filter-tabs mb3" style="margin-bottom:16px">
+        <div class="filter-tab active" onclick="activateTab(this)">All</div>
+        <div class="filter-tab" onclick="activateTab(this)">Energy</div>
+        <div class="filter-tab" onclick="activateTab(this)">Focus</div>
+        <div class="filter-tab" onclick="activateTab(this)">Emotional Balance</div>
+        <div class="filter-tab" onclick="activateTab(this)">Sleep</div>
+        <div class="filter-tab" onclick="activateTab(this)">Abundance</div>
+      </div>
+      <div class="med-grid">
+        <div class="med-card">
+          <div class="med-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+          <div class="med-info"><h4>Inner Clarity</h4><p>12 min</p></div>
+        </div>
+        <div class="med-card">
+          <div class="med-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+          <div class="med-info"><h4>Resilience</h4><p>15 min</p></div>
+        </div>
+        <div class="med-card">
+          <div class="med-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+          <div class="med-info"><h4>Abundance</h4><p>18 min</p></div>
+        </div>
+        <div class="med-card">
+          <div class="med-thumb"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+          <div class="med-info"><h4>Sleep &amp; Recovery</h4><p>20 min</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL: JOURNAL -->
+    <div class="panel" id="p-journal" style="max-width:680px">
+      <div class="t-label mb1">Private Space</div>
+      <div class="t-h1 mt1">My Journal</div>
+      <div class="t-sm t-soft mt1">A private space to reflect, release and realign.</div>
+      <div style="margin-top:24px;margin-bottom:24px">
+        <button class="btn-gold">New Entry &nbsp;+</button>
+      </div>
+      <div class="journal-row">
+        <div>
+          <div class="journal-row-name">Today's Reflection</div>
+          <div class="t-xs t-soft mt1">Day 7 · Awareness</div>
+        </div>
+        <div class="chevron"></div>
+      </div>
+      <div class="journal-row"><div class="journal-row-name">Gratitude</div><div class="chevron"></div></div>
+      <div class="journal-row"><div class="journal-row-name">What I Noticed</div><div class="chevron"></div></div>
+      <div class="journal-row"><div class="journal-row-name">What I'm Releasing</div><div class="chevron"></div></div>
+      <div class="journal-row"><div class="journal-row-name">My Next Step</div><div class="chevron"></div></div>
+    </div>
+
+    <!-- PANEL: WISDOM CARDS -->
+    <div class="panel" id="p-wisdom">
+      <div class="t-label mb1">Daily Inspiration</div>
+      <div class="t-h1 mt1">Wisdom Cards</div>
+      <div class="t-sm t-soft mt1">Daily inspiration from timeless wisdom.</div>
+      <div class="wisdom-grid">
+        <div class="wisdom-card">
+          <div class="wisdom-photo"><div class="wisdom-symbol">✦</div></div>
+          <div class="wisdom-info"><h4>Bible</h4><p>Guidance &amp; Strength</p></div>
+        </div>
+        <div class="wisdom-card">
+          <div class="wisdom-photo"><div class="wisdom-symbol">◎</div></div>
+          <div class="wisdom-info"><h4>Stoic</h4><p>Perspective &amp; Clarity</p></div>
+        </div>
+        <div class="wisdom-card">
+          <div class="wisdom-photo"><div class="wisdom-symbol">◇</div></div>
+          <div class="wisdom-info"><h4>Islamic</h4><p>Surrender &amp; Trust</p></div>
+        </div>
+      </div>
+      <div style="margin-top:20px"><button class="btn-outline">More Traditions →</button></div>
+    </div>
+
+    <!-- PANEL: PROGRESS -->
+    <div class="panel" id="p-progress">
+      <div class="t-label mb1">Your Growth</div>
+      <div class="t-h1 mt1">My Progress</div>
+      <div class="t-sm t-soft mt1">A clear view of your growth across the 28-day journey.</div>
+      <div style="display:grid;grid-template-columns:180px 1fr;gap:48px;align-items:center;margin-top:28px">
+        <div style="text-align:center">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle cx="80" cy="80" r="66" fill="none" stroke="var(--border)" stroke-width="10"/>
+            <circle cx="80" cy="80" r="66" fill="none" stroke="var(--gold-line)" stroke-width="10" stroke-linecap="round" stroke-dasharray="414.7" stroke-dashoffset="157.6" transform="rotate(-90 80 80)"/>
+          </svg>
+          <div style="margin-top:-80px;position:relative">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600;color:var(--gold)">62%</div>
+            <div class="t-xs t-soft" style="margin-top:4px;text-transform:uppercase;letter-spacing:0.1em">Journey Complete</div>
+          </div>
+          <div style="margin-top:72px"></div>
+        </div>
+        <div>
+          <div class="progress-row"><span class="progress-label">Clarity</span><div class="progress-track"><div class="progress-fill" style="width:78%"></div></div></div>
+          <div class="progress-row"><span class="progress-label">Energy</span><div class="progress-track"><div class="progress-fill" style="width:62%"></div></div></div>
+          <div class="progress-row"><span class="progress-label">Focus</span><div class="progress-track"><div class="progress-fill" style="width:70%"></div></div></div>
+          <div class="progress-row"><span class="progress-label">Emotional Balance</span><div class="progress-track"><div class="progress-fill" style="width:55%"></div></div></div>
+          <div class="progress-row"><span class="progress-label">Resilience</span><div class="progress-track"><div class="progress-fill" style="width:68%"></div></div></div>
+          <div class="progress-row"><span class="progress-label">Wellbeing</span><div class="progress-track"><div class="progress-fill" style="width:72%"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL: LIFE VISION -->
+    <div class="panel" id="p-vision" style="align-items:center;justify-content:center;min-height:calc(100vh - 36px);text-align:center">
+      <div class="t-label mb1">Your Blueprint</div>
+      <div class="t-display mt2" style="font-size:48px">Life Vision</div>
+      <div class="t-sm t-soft mt2" style="max-width:380px;line-height:1.8">Revisit, refine and bring<br/>your vision to life.</div>
+      <button class="btn-gold mt3" style="margin-top:32px">My Vision →</button>
+    </div>
+
+    <!-- PANEL: SESSIONS -->
+    <div class="panel" id="p-sessions" style="max-width:520px">
+      <div class="t-label mb1">1:1 Advisory</div>
+      <div class="t-h1 mt1">Private Sessions</div>
+      <div class="t-sm t-soft mt1" style="margin-bottom:28px">Your 1:1 advisory sessions and key milestones.</div>
+      <button class="btn-gold session-btn">Book a Session</button>
+      <button class="btn-outline session-btn">My Schedule</button>
+      <button class="btn-outline session-btn">Session Notes</button>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /s-app -->
+
+<!-- ══════════════════════════════════════════
+     S17 · DAY COMPLETE
+══════════════════════════════════════════ -->
+<div class="screen" id="s-complete" style="background:var(--bg)">
+  <div style="text-align:center;max-width:460px;padding:0 24px">
+    <div style="width:52px;height:52px;border:1px solid var(--gold-line);border-radius:50%;margin:0 auto 28px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--gold)">HMA</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;color:var(--text);line-height:1.6;margin-bottom:12px">The day is complete.<br/>Return to yourself.</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:21px;color:var(--text-soft);letter-spacing:0.1em;margin-bottom:36px">Rest. Integrate. Rise.</div>
+    <button class="btn-outline" onclick="goApp('p-dashboard')">Return Home</button>
+    <div class="mt2 t-xs t-soft" style="margin-top:16px">[ Background: moonlit water · night scene ]</div>
+  </div>
+</div>
+
+<script>
+// ─── State ─────────────────────────────────
+let curScreen = 's-splash';
+let curPanel  = 'p-dashboard';
+let journeyMode = 'inner';
+let innerStep = 0, outerStep = 0;
+const iaScores = [5,5,5,5,5,5];
+const oaScores = [5,5,5,5,5,5];
+
+const INNER_PILLARS = [
+  {name:'Spirituality & Faith',     desc:'Connection to God, faith or your chosen source of meaning and purpose',      q:'How connected do you feel to God, your faith, or your own source of spiritual meaning?'},
+  {name:'Mind & Beliefs',           desc:'Thought patterns, self-worth, mindset',                                        q:'How clear and focused is your mind throughout the day?'},
+  {name:'Emotional Mastery',        desc:'Responses to fear, stress and pressure',                                       q:'How effectively do you respond to pressure and difficult emotions?'},
+  {name:'Physical Vitality',        desc:'Sleep, nourishment, movement, energy',                                         q:'How satisfied are you with your physical energy, sleep and wellbeing?'},
+  {name:'Identity & Values',        desc:'Authenticity, purpose, personal standards',                                    q:'How closely do your daily choices reflect your personal values?'},
+  {name:'Cognitive Capacity',       desc:'Focus, resilience, decisions, presence',                                       q:'How confidently and presently do you make important decisions?'},
+];
+const OUTER_PILLARS = [
+  {name:'Relationships & Family',   desc:'Love, communication, connection',                                              q:'How fulfilled are you by your relationships and family life?'},
+  {name:'Career & Leadership',      desc:'Professional purpose, influence, performance',                                 q:'How aligned is your professional life with your ambitions?'},
+  {name:'Wealth & Freedom',         desc:'Financial direction, choices, resources',                                      q:'How satisfied are you with your financial direction and freedom?'},
+  {name:'Lifestyle & Environment',  desc:'Home, routines, surroundings',                                                 q:'How well does your lifestyle support the person you wish to become?'},
+  {name:'Experiences & Joy',        desc:'Adventure, learning, enjoyment',                                               q:'How much joy and meaningful experience do you create in your life?'},
+  {name:'Contribution & Legacy',    desc:'Service, impact, long-term vision',                                            q:'How clear is the impact and legacy you wish to build?'},
+];
+
+// ─── Navigation ────────────────────────────
+const FLOW_MAP = {
+  's-splash':'fn-splash','s-signin':'fn-signin','s-experience':'fn-exp',
+  's-atmosphere':'fn-atm','s-journey-select':'fn-journey',
+  's-inner-assess':'fn-assess-i','s-outer-assess':'fn-assess-o',
+  's-priorities':'fn-priority','s-complete':'fn-complete',
+};
+const PANEL_MAP = {
+  'p-dashboard':'fn-dash','p-today':'fn-today','p-meditations':'fn-med',
+  'p-journal':'fn-journal','p-wisdom':'fn-wisdom','p-progress':'fn-progress',
+  'p-vision':'fn-vision','p-sessions':'fn-sessions',
+};
+const NAV_MAP = {
+  'p-dashboard':'nav-dashboard','p-today':'nav-journey','p-meditations':'nav-meditations',
+  'p-journal':'nav-journal','p-wisdom':'nav-wisdom','p-progress':'nav-progress',
+  'p-vision':'nav-vision','p-sessions':'nav-sessions',
+};
+
+function setFlowActive(id) {
+  document.querySelectorAll('.flow-node').forEach(n => n.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+}
+
+function goTo(id) {
+  if (id === curScreen) return;
+  document.getElementById(curScreen).classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  curScreen = id;
+  if (FLOW_MAP[id]) setFlowActive(FLOW_MAP[id]);
+}
+
+function goApp(panelId) {
+  if (curScreen !== 's-app') {
+    document.getElementById(curScreen).classList.remove('active');
+    document.getElementById('s-app').classList.add('active');
+    curScreen = 's-app';
+  }
+  document.getElementById(curPanel).classList.remove('active');
+  document.getElementById(panelId).classList.add('active');
+  curPanel = panelId;
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (NAV_MAP[panelId]) document.getElementById(NAV_MAP[panelId]).classList.add('active');
+  if (PANEL_MAP[panelId]) setFlowActive(PANEL_MAP[panelId]);
+  document.querySelector('.main').scrollTop = 0;
+}
+
+// ─── Experience picker ──────────────────────
+function pickExp(val, el) {
+  document.querySelectorAll('.exp-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+// ─── Filter tabs ────────────────────────────
+function activateTab(el) {
+  el.closest('.filter-tabs').querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ─── Journey ───────────────────────────────
+function pickJourney(val, el) {
+  journeyMode = val;
+  document.querySelectorAll('.journey-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function startAssessment() {
+  innerStep = 0; outerStep = 0;
+  if (journeyMode === 'outer') { renderCard('outer', 0); goTo('s-outer-assess'); }
+  else { renderCard('inner', 0); goTo('s-inner-assess'); }
+}
+
+// ─── Assessment card renderer ───────────────
+function renderCard(area, step) {
+  const pillars = area === 'inner' ? INNER_PILLARS : OUTER_PILLARS;
+  const scores  = area === 'inner' ? iaScores : oaScores;
+  const pre     = area === 'inner' ? 'ia' : 'oa';
+  const p = pillars[step];
+  const pct = ((step + 1) / 6 * 100).toFixed(1);
+
+  document.getElementById(pre + '-fill').style.width = pct + '%';
+
+  document.getElementById(pre + '-content').innerHTML =
+    '<div class="assess-step">' + p.name + ' &nbsp;·&nbsp; ' + (step + 1) + ' of 6</div>' +
+    '<div class="assess-q">' + p.q + '</div>' +
+    '<div class="assess-desc">' + p.desc + '</div>' +
+    '<div class="slider-wrap">' +
+      '<div class="slider-labels"><span class="t-xs t-soft">1 — Not at all</span><span class="t-xs t-soft">10 — Fully</span></div>' +
+      '<input type="range" class="wf-slider" id="' + pre + '-sl" min="1" max="10" value="' + scores[step] + '" ' +
+        'oninput="document.getElementById(\'' + pre + '-sv\').textContent=this.value;' + (area==='inner'?'ia':'oa') + 'Scores[' + step + ']=+this.value">' +
+      '<div class="slider-val" id="' + pre + '-sv">' + scores[step] + '</div>' +
+    '</div>';
+
+  // Back button
+  const backBtn = document.getElementById(pre + '-back');
+  if (step === 0 && area === 'inner')  backBtn.onclick = () => goTo('s-journey-select');
+  else if (step === 0 && area === 'outer' && journeyMode === 'both') backBtn.onclick = () => { innerStep = 5; renderCard('inner', 5); goTo('s-inner-assess'); };
+  else if (step === 0) backBtn.onclick = () => goTo('s-journey-select');
+  else backBtn.onclick = (function(a, s) { return function() { if (a==='inner'){innerStep=s-1;renderCard('inner',s-1);}else{outerStep=s-1;renderCard('outer',s-1);} }; })(area, step);
+
+  // Next label
+  const nextBtn = document.getElementById(pre + '-next');
+  nextBtn.textContent = step < 5 ? 'Next →' : (area==='inner' && journeyMode==='both' ? 'Continue to Outer →' : 'Continue →');
+}
+
+function assessNext(area) {
+  const step = area === 'inner' ? innerStep : outerStep;
+  if (step < 5) {
+    if (area === 'inner') { innerStep++; renderCard('inner', innerStep); }
+    else { outerStep++; renderCard('outer', outerStep); }
+  } else {
+    if (area === 'inner' && journeyMode === 'both') { outerStep = 0; renderCard('outer', 0); goTo('s-outer-assess'); }
+    else { renderPriorities(); goTo('s-priorities'); }
+  }
+}
+
+// ─── Priorities ─────────────────────────────
+function renderPriorities() {
+  const pillars = journeyMode === 'outer' ? OUTER_PILLARS : INNER_PILLARS;
+  const scores  = journeyMode === 'outer' ? oaScores : iaScores;
+  document.getElementById('priority-list').innerHTML =
+    pillars.map(function(p, i) {
+      return '<div class="priority-chip' + (i===0?' sel':'') + '" onclick="document.querySelectorAll(\'.priority-chip\').forEach(c=>c.classList.remove(\'sel\'));this.classList.add(\'sel\')">' +
+        '<div><h4>' + p.name + '</h4><p>' + p.desc + '</p></div>' +
+        '<div class="priority-score">' + scores[i] + '</div>' +
+      '</div>';
+    }).join('');
+}
+
+function priorityBack() {
+  if (journeyMode === 'outer') { outerStep = 5; renderCard('outer', 5); goTo('s-outer-assess'); }
+  else { innerStep = 5; renderCard('inner', 5); goTo('s-inner-assess'); }
+}
+</script>
+</body>
+</html>
