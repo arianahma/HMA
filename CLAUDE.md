@@ -234,19 +234,94 @@ Firestore Console → `hmaUsers` collection → document ID = Google email → f
 Greeting → Today's Architecture → one primary action.
 Secondary: Morning Arrival · Afternoon Reset · Evening Return · My Journal · Meditations · Wisdom Cards · My Architecture / Progress
 
-### Personal Pillars (10 — chosen at onboarding)
-1. **Mind Mastery** — patterns, beliefs, awareness, emotional regulation
-2. **Clarity and Decisions** — focus, discernment, purposeful action
-3. **Love and Relationships** — self-connection, family, parenting, intimacy
-4. **Joy and Presence** — gratitude, awe, being fully where you are
-5. **Physical Vitality** — movement, strength, nourishment, recovery
-6. **Body and Emotional Balance** — stress awareness, body signals
-7. **Courage and Resilience** — fear, guilt, pressure, uncertainty
-8. **Spiritual Connection** — faith, meaning, chosen worldview
-9. **Freedom and Abundance** — relationship with money, possibility, choice
-10. **Leadership and Legacy** — contribution, influence, human impact
+### Inner & Outer Architecture™ — Two Journeys (replaces single pillar list)
 
-Chosen pillar informs wisdom, meditations, exercises, reminders, progress reflections. Architect can change at any time.
+The programme is structured around **two distinct areas**, each with 6 pillars, their own assessment and their own Personal Blueprint output.
+
+#### Inner Architecture™ — *Mastering Yourself*
+Purpose: Master the human behind the life — spiritual connection, awareness, wellbeing, emotional regulation, values and personal capacity.
+
+| Pillar | Architectural focus | Desired direction |
+|---|---|---|
+| **Spirituality, Faith & Meaning** *(first — foundational)* | Relationship with God / the Creator, faith or chosen source of meaning; prayer, contemplation, gratitude | Deeper connection, purpose and inner peace |
+| **Mind & Beliefs** | Thought patterns, self-worth, mindset | Greater mental clarity |
+| **Emotional Mastery** | Fear, stress, responses under pressure | More intentional regulation |
+| **Physical Vitality** | Sleep, nourishment, movement, energy | Sustainable wellbeing |
+| **Identity & Values** | Authenticity, purpose, personal standards | Stronger self-alignment |
+| **Cognitive Capacity & Presence** | Focus, resilience, decisions, present-moment awareness | Clearer decisions, presence and performance |
+
+**Inner Assessment — 6 ratings (1–10) + open questions:**
+1. How connected do you feel to God, your faith, or your own source of spiritual meaning and purpose?
+2. How clear and focused is your mind throughout the day?
+3. How effectively do you respond to pressure and difficult emotions?
+4. How satisfied are you with your physical energy, sleep and wellbeing?
+5. How closely do your daily choices reflect your personal values?
+6. How confidently and presently do you make important decisions?
+
+*Open response:* What is currently creating the greatest internal friction? · What recurring thought, belief or response would you like to change? · How would you like to feel and function 28 days from today? · What role would you like faith, spiritual connection or personal meaning to play in that change? *(optional)*
+
+**Output:** Personal Inner Architecture Blueprint — chosen pillar, present reality, desired state, measure, daily action, review dates.
+
+---
+
+#### Outer Architecture™ — *Architecting Your Life*
+Purpose: Architect the life you wish to experience and create — relationships, work, resources, lifestyle, joy and contribution.
+
+| Pillar | Architectural focus | Desired direction |
+|---|---|---|
+| **Relationships & Family** | Love, communication, connection | More fulfilling relationships |
+| **Career & Leadership** | Professional purpose, influence, performance | Meaningful professional growth |
+| **Wealth & Freedom** | Financial direction, choices, resources | Greater financial clarity |
+| **Lifestyle & Environment** | Home, routines, surroundings | A supportive daily environment |
+| **Experiences & Joy** | Adventure, learning, enjoyment | A richer lived experience |
+| **Contribution & Legacy** | Service, impact, long-term vision | Purposeful contribution |
+
+**Outer Assessment — 6 ratings (1–10) + open questions:**
+1. How fulfilled are you by your relationships and family life?
+2. How aligned is your professional life with your ambitions?
+3. How satisfied are you with your financial direction and freedom?
+4. How well does your lifestyle support the person you wish to become?
+5. How much joy and meaningful experience do you create in your life?
+6. How clear is the impact and legacy you wish to build?
+
+*Open response:* Which area of your life most needs your attention? · What specific result would make the greatest difference in 28 days? · What would your ideal life in this area look like 12 months from now?
+
+**Output:** Personal Outer Architecture Blueprint — baseline, vision, target, action plan, review dates and progress measure.
+
+---
+
+### Onboarding flow (canonical)
+`Welcome → Inner assessment (6 ratings + open questions) → Outer assessment (6 ratings + open questions) → Priorities → Outcomes (Personal Outcome Builder) → Dashboard → Day 1`
+
+### Personal Outcome Builder
+Each blueprint records: Area & pillar · Current reality (1–10 + context) · Desired 28-day outcome · Measure (frequency / completion / duration / self-rating) · Daily/weekly action · Weekly reviews (Days 7, 14, 21) · Final review (Day 28) · 90-day direction.
+
+*Examples (illustrative, not guaranteed):* Inner/Spiritual 4→7: 10-min daily prayer/contemplation. Inner/Focus 4→7: one 25-min uninterrupted focus block ×5/week. Outer/Relationships 5→7: two device-free meaningful conversations/week.
+
+### From discovery to Personal Architecture (5 steps)
+1. **Discover** — 12 ratings + 7 reflection questions (spiritual reflection optional)
+2. **Prioritise** — Architect chooses one priority per area (not automatically the lowest score)
+3. **Define** — Current reality, 28-day outcome, measure, action, 90-day aspiration
+4. **Activate** — Match ARCH™ lessons, exercises, meditations and wisdom to chosen priorities
+5. **Review** — Weekly check-ins (Days 7, 14, 21) + final Day 28 reflection
+
+### Implementation rules
+- Spirituality and faith are prominently available but **never imposed** — allow religious / spiritual / secular / "prefer not to answer" selections
+- All sensitive questions optional; no diagnostic claims; no ranking of Architects
+- Private advisory clients unlock content with 8 sessions; self-guided clients progress by day
+- Save all responses with timestamps; allow edits and return without losing progress
+- Day 28 export: both blueprints, baseline comparison, completed actions, 90-Day Architecture
+- Audio and visual environment preferences operate independently; sound off by default
+
+### Build acceptance checklist
+- [ ] Two 6-pillar assessments work end-to-end (numbered 1–6 within each)
+- [ ] All 12 ratings and 7 reflection prompts (1 optional) save and reload
+- [ ] Spirituality, faith & meaning appears as first Inner pillar with inclusive preferences
+- [ ] Architect chooses priorities and measurable 28-day outcomes
+- [ ] Dashboard displays both blueprints, actions and progress
+- [ ] 28-day ARCH™ lessons, reflections, check-ins and weekly reviews work
+- [ ] Audio and visual environment preferences operate independently
+- [ ] Final downloadable 90-Day Architecture is readable and complete
 
 ### Daily rituals & notifications
 | Ritual | Default time | Content |
