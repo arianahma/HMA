@@ -282,6 +282,25 @@ svg{display:block}
   opacity:0.7;transition:opacity 0.2s;
 }
 .mobile-env button.active{opacity:1;box-shadow:0 0 0 1.5px var(--env-accent),0 2px 12px rgba(0,0,0,0.2)}
+
+/* ── Experience cards ── */
+.exp-card{padding:4cqw 5cqw;border-radius:7cqw;border:1.5px solid var(--env-border);background:linear-gradient(135deg,var(--env-surface),var(--env-surface2));display:flex;align-items:center;gap:4cqw;cursor:pointer;transition:all 0.22s}
+.exp-card.sel{border-color:var(--env-accent);background:var(--env-accent-soft)}
+.exp-icon{font-size:8cqw;line-height:1;width:10cqw;text-align:center;flex-shrink:0}
+.exp-radio{width:5.5cqw;height:5.5cqw;border-radius:50%;border:1.5px solid var(--env-border);flex-shrink:0;margin-left:auto;position:relative;transition:all 0.2s}
+.exp-radio::after{content:'';position:absolute;inset:2.5px;border-radius:50%;background:var(--env-accent);opacity:0;transition:opacity 0.2s}
+.exp-card.sel .exp-radio{border-color:var(--env-accent)}
+.exp-card.sel .exp-radio::after{opacity:1}
+
+/* ── Sound toggles ── */
+.sound-row{display:flex;align-items:center;gap:3cqw;padding:3.5cqw 4cqw;border-radius:5cqw;border:1px solid var(--env-border);background:var(--env-surface2);margin-bottom:2cqw;cursor:pointer;transition:border-color 0.2s}
+.sound-row.on{border-color:var(--env-accent)}
+.sound-icon{font-size:5cqw;width:7cqw;text-align:center;flex-shrink:0}
+.snd-label{flex:1}
+.toggle{width:12cqw;height:7cqw;border-radius:4cqw;background:var(--env-border);position:relative;flex-shrink:0;transition:background 0.22s}
+.sound-row.on .toggle{background:var(--env-accent)}
+.toggle-knob{position:absolute;top:1cqw;left:1cqw;width:5cqw;height:5cqw;border-radius:50%;background:white;transition:transform 0.22s;box-shadow:0 1px 4px rgba(0,0,0,0.2)}
+.sound-row.on .toggle-knob{transform:translateX(5cqw)}
 </style>
 </head>
 <body>
@@ -291,26 +310,112 @@ svg{display:block}
 <div class="phone" id="phone" data-env="day">
   <div class="wallpaper"></div>
 
+  <!-- ═══ SPLASH ═══ -->
+  <div class="screen active" id="s-splash">
+    <div class="status" style="opacity:0"><span>9:41</span></div>
+    <div class="scroller flex-col" style="justify-content:center">
+      <div class="cent" style="padding-top:6cqw">
+        <svg viewBox="0 0 60 72" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:14cqw;height:14cqw;display:inline-block">
+          <path d="M30 4 C16 4 6 16 6 30 C6 46 18 60 30 68 C42 60 54 46 54 30 C54 16 44 4 30 4Z" stroke="var(--env-accent)" stroke-width="1.5" fill="none"/>
+          <path d="M30 68 C30 68 30 36 12 20" stroke="var(--env-accent)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <path d="M30 68 C30 68 30 32 48 18" stroke="var(--env-accent)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        </svg>
+        <div class="t-mark mt5" style="font-size:2.8cqw;letter-spacing:0.32em">Human Mastery Architecture™</div>
+        <div class="t-display mt2" style="font-size:21cqw;line-height:0.88;letter-spacing:-0.04em">HMA</div>
+        <div class="t-greet mt5" style="font-size:4.8cqw">A 28-Day Private Online Journey</div>
+        <div class="t-sm t-soft mt2" style="font-size:3.4cqw;letter-spacing:0.08em">Clarity · Capacity · Mastery · Legacy</div>
+      </div>
+      <div class="spacer" style="min-height:14cqw"></div>
+      <div>
+        <button class="btn btn-primary" onclick="goTo('s-signin')">Begin Your Journey →</button>
+        <div class="t-label cent mt4" style="font-size:2.4cqw;letter-spacing:0.06em">Private · By invitation only.</div>
+      </div>
+    </div>
+  </div>
+
   <!-- ═══ SIGN IN ═══ -->
-  <div class="screen active" id="s-signin">
+  <div class="screen" id="s-signin">
     <div class="status"><span>9:41</span><div class="status-icons"><svg viewBox="0 0 24 24"><path d="M1.5 8.5c5.5-5.5 15.5-5.5 21 0"/><path d="M5 12c3.9-3.9 11.1-3.9 15 0"/><path d="M8.5 15.5c2.2-2.2 6.8-2.2 9 0"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg><svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11v4" stroke-linecap="round"/></svg></div></div>
     <div class="scroller flex-col">
       <div class="spacer" style="min-height:12cqw"></div>
       <div class="cent">
         <div class="t-mark">Human Mastery Architecture</div>
         <div class="t-display mt4" style="font-size:12cqw;letter-spacing:-0.04em">HMA</div>
-        <div class="t-greet mt3" style="font-size:5.5cqw">"Arrive as you are."</div>
+        <div class="t-greet mt3" style="font-size:5.5cqw">Welcome, Architect.</div>
         <div class="t-body t-soft mt4" style="font-size:3.4cqw;max-width:68cqw;margin:4cqw auto 0">A private 28-day sanctuary for founders and leaders.</div>
       </div>
       <div class="spacer"></div>
       <div>
-        <button class="btn btn-primary" onclick="goTo('s-onboard')">
+        <button class="btn btn-primary" onclick="goTo('s-experience')">
           <svg style="width:4.5cqw;height:4.5cqw;fill:currentColor" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           Continue with Google
         </button>
-        <button class="btn btn-ghost mt3" style="font-size:3.2cqw;text-transform:none;letter-spacing:0.02em">Continue with email</button>
+        <button class="btn btn-ghost mt3" style="font-size:3.2cqw;text-transform:none;letter-spacing:0.02em" onclick="goTo('s-experience')">Continue with email</button>
         <div class="t-label cent mt5" style="font-size:2.4cqw">Continuing means you agree to Ariana's privacy policy.</div>
       </div>
+    </div>
+  </div>
+
+  <!-- ═══ CHOOSE EXPERIENCE ═══ -->
+  <div class="screen" id="s-experience">
+    <div class="status"><span>9:41</span></div>
+    <div class="scroller">
+      <div class="t-label mb3">Your experience</div>
+      <div class="t-heading">Choose Your<br/>Environment</div>
+      <div class="t-sm t-soft mt2 mb6">A personalised world for your 28-day journey.</div>
+      <div class="exp-card sel" onclick="selectExp(this,'immersive')">
+        <div class="exp-icon">🌿</div>
+        <div class="flex-col" style="gap:1cqw;flex:1">
+          <div class="t-body" style="font-weight:500;font-size:4cqw">Immersive</div>
+          <div class="t-sm t-soft">Nature-rich, sensory and fully immersive</div>
+        </div>
+        <div class="exp-radio"></div>
+      </div>
+      <div class="exp-card mt3" onclick="selectExp(this,'neutral')">
+        <div class="exp-icon">☁️</div>
+        <div class="flex-col" style="gap:1cqw;flex:1">
+          <div class="t-body" style="font-weight:500;font-size:4cqw">Neutral</div>
+          <div class="t-sm t-soft">Clean, calm and focused</div>
+        </div>
+        <div class="exp-radio"></div>
+      </div>
+      <div class="exp-card mt3" onclick="selectExp(this,'masculine')">
+        <div class="exp-icon">🏔</div>
+        <div class="flex-col" style="gap:1cqw;flex:1">
+          <div class="t-body" style="font-weight:500;font-size:4cqw">Masculine</div>
+          <div class="t-sm t-soft">Strong, grounded and performance-led</div>
+        </div>
+        <div class="exp-radio"></div>
+      </div>
+      <button class="btn btn-primary mt8" onclick="goTo('s-atmosphere')">Continue →</button>
+      <div class="cent mt3"><button class="btn-text" onclick="goTo('s-signin')">← Back</button></div>
+    </div>
+  </div>
+
+  <!-- ═══ SET ATMOSPHERE ═══ -->
+  <div class="screen" id="s-atmosphere">
+    <div class="status"><span>9:41</span></div>
+    <div class="scroller">
+      <div class="t-label mb3">Your atmosphere</div>
+      <div class="t-heading">Set Your<br/>Sounds</div>
+      <div class="t-sm t-soft mt2 mb5">Audio is off by default. Choose what supports your practice.</div>
+      <div class="t-label mb3" style="font-size:2.4cqw;letter-spacing:0.14em">NATURE</div>
+      <div class="sound-row" onclick="toggleSound(this)"><div class="sound-icon">🌿</div><div class="snd-label"><div class="t-body" style="font-weight:500;font-size:3.6cqw">Forest &amp; Birds</div></div><div class="toggle"><div class="toggle-knob"></div></div></div>
+      <div class="sound-row" onclick="toggleSound(this)"><div class="sound-icon">💧</div><div class="snd-label"><div class="t-body" style="font-weight:500;font-size:3.6cqw">Waterfall &amp; River</div></div><div class="toggle"><div class="toggle-knob"></div></div></div>
+      <div class="sound-row" onclick="toggleSound(this)"><div class="sound-icon">🌊</div><div class="snd-label"><div class="t-body" style="font-weight:500;font-size:3.6cqw">Ocean &amp; Waves</div></div><div class="toggle"><div class="toggle-knob"></div></div></div>
+      <div class="sound-row" onclick="toggleSound(this)"><div class="sound-icon">🔥</div><div class="snd-label"><div class="t-body" style="font-weight:500;font-size:3.6cqw">Fire &amp; Hearth</div></div><div class="toggle"><div class="toggle-knob"></div></div></div>
+      <div class="sound-row" onclick="toggleSound(this)"><div class="sound-icon">🌙</div><div class="snd-label"><div class="t-body" style="font-weight:500;font-size:3.6cqw">Night &amp; Stars</div></div><div class="toggle"><div class="toggle-knob"></div></div></div>
+      <div class="divider"></div>
+      <div class="t-label mb3" style="font-size:2.4cqw;letter-spacing:0.14em">BINAURAL FOCUS</div>
+      <div class="sound-row" onclick="toggleSound(this)"><div class="sound-icon">🎯</div><div class="snd-label"><div class="t-body" style="font-weight:500;font-size:3.6cqw">Deep Focus</div><div class="t-sm t-soft" style="font-size:2.8cqw">40 Hz</div></div><div class="toggle"><div class="toggle-knob"></div></div></div>
+      <div class="sound-row" onclick="toggleSound(this)"><div class="sound-icon">✨</div><div class="snd-label"><div class="t-body" style="font-weight:500;font-size:3.6cqw">Creativity</div><div class="t-sm t-soft" style="font-size:2.8cqw">12 Hz</div></div><div class="toggle"><div class="toggle-knob"></div></div></div>
+      <div class="sound-row" onclick="toggleSound(this)"><div class="sound-icon">⚖️</div><div class="snd-label"><div class="t-body" style="font-weight:500;font-size:3.6cqw">Calm &amp; Balance</div><div class="t-sm t-soft" style="font-size:2.8cqw">8 Hz</div></div><div class="toggle"><div class="toggle-knob"></div></div></div>
+      <div class="sound-row" onclick="toggleSound(this)"><div class="sound-icon">😴</div><div class="snd-label"><div class="t-body" style="font-weight:500;font-size:3.6cqw">Sleep &amp; Recovery</div><div class="t-sm t-soft" style="font-size:2.8cqw">4 Hz</div></div><div class="toggle"><div class="toggle-knob"></div></div></div>
+      <div class="glass-sm p4 mt3" style="border:1px solid var(--env-border)">
+        <div class="t-sm t-soft" style="font-size:2.8cqw;line-height:1.65">Binaural tracks are a listening preference, not a proven treatment. Volume is separate from your device.</div>
+      </div>
+      <button class="btn btn-primary mt6" onclick="goTo('s-onboard')">Continue →</button>
+      <div class="cent mt3"><button class="btn-text" onclick="goTo('s-experience')">← Back</button></div>
     </div>
   </div>
 
@@ -333,7 +438,7 @@ svg{display:block}
         </div>
       </div>
       <button class="btn btn-primary mt8" onclick="goTo('s-pillars')">Choose your pillars →</button>
-      <div class="cent mt3"><button class="btn-text" onclick="goTo('s-signin')">← Back</button></div>
+      <div class="cent mt3"><button class="btn-text" onclick="goTo('s-atmosphere')">← Back</button></div>
     </div>
   </div>
 
@@ -610,7 +715,7 @@ svg{display:block}
 </div><!-- /board -->
 <script>
 // ── Navigation ──────────────────────────────
-let cur='s-signin';
+let cur='s-splash';
 function goTo(id){
   if(id===cur)return;
   const prev=document.getElementById(cur);
@@ -644,6 +749,14 @@ function setEnv(env,btn){
   );
 })();
 
+// ── Experience selection ──────────────────────
+function selectExp(el,val){
+  document.querySelectorAll('.exp-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('phone').dataset.exp=val;
+}
+// ── Sound toggle ──────────────────────────────
+function toggleSound(el){el.classList.toggle('on')}
 // ── Pillar toggle (max 3) ────────────────────
 function togglePillar(el){
   const grid=document.getElementById('pillarGrid');
